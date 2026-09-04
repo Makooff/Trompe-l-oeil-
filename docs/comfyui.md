@@ -9,21 +9,20 @@ remplace son image de garde, les autres attendent.
 
 ## 1. Ce que le site attend
 
-Pour chaque pièce, quatre fichiers PNG dans `rendus/<id>/` à la racine du
+Pour chaque pièce, deux fichiers PNG dans `rendus/<id>/` à la racine du
 dépôt (dossier ignoré par git) :
 
 | Fichier | Contenu | Format |
 |---|---|---|
 | `ferme.png` | La pièce fermée, détourée, fond transparent | 2048 px de haut, RGBA |
 | `coupe.png` | La même pièce coupée en deux, moitié avant retirée, détourée | 2048 px de haut, RGBA |
-| `profondeur-ferme.png` | Carte de profondeur de `ferme.png` | niveaux de gris, 16 bits |
-| `profondeur-coupe.png` | Carte de profondeur de `coupe.png` | niveaux de gris, 16 bits |
 
-Optionnel : `trois-quarts.png`, la pièce fermée tournée de 30°, pour la
-collection.
+Et pour le citron, qui porte le hero, une vidéo : `coupe.mp4`, la pièce qui
+s'ouvre en deux, caméra fixe (section 9).
 
-Ensuite `node scripts/pieces.mjs <id>` produit les AVIF, WebP et cartes réduites
-dans `public/pieces/<id>/`. Le site lit ces fichiers, rien d'autre.
+Ensuite `node scripts/pieces.mjs <id>` produit les AVIF et WebP dans
+`public/pieces/<id>/`, et `node scripts/sequence.mjs citron` découpe la vidéo
+en images pour le scroll. Le site lit ces fichiers, rien d'autre.
 
 Les identifiants : `citron`, `noisette`, `cerise`, `poire`, `caillou`, `savon`,
 `oeuf`, `marbre`.
@@ -38,7 +37,6 @@ Les identifiants : `citron`, `noisette`, `cerise`, `poire`, `caillou`, `savon`,
 3. Via le Manager, installez ces quatre packs de nœuds :
    - `ComfyUI-GGUF` (city96), pour charger les modèles quantifiés.
    - `ComfyUI-BiRefNet` (détourage).
-   - `ComfyUI-DepthAnythingV3` (PozzettiAndrea), cartes de profondeur.
    - `ComfyUI-Impact-Pack`, pour le nœud d'agrandissement par tuiles.
 4. Redémarrez ComfyUI.
 
@@ -62,7 +60,6 @@ vérifiez-les sur la page du dépôt avant de copier. Rangez-les ainsi :
 | l'encodeur texte de Klein (Qwen3, fp8 ou GGUF) | `models/text_encoders/` |
 | le VAE FLUX.2 | `models/vae/` |
 | `BiRefNet-general` | téléchargé par le nœud au premier usage |
-| `DA3-Large` (Depth Anything V3) | téléchargé par le nœud au premier usage |
 | `4x-UltraSharp.pth` | `models/upscale_models/` |
 
 Repli si Klein manque de fidélité sur les surfaces brillantes : FLUX.1 dev en
@@ -120,14 +117,7 @@ vers `JoinImageWithAlpha`, puis `SaveImage` en PNG. Vérifiez le bord du glaçag
 à 200 % : un halo clair d'un pixel se corrige avec un `GrowMask` de -1 avant
 la jonction.
 
-### 4.5 Profondeur
-
-`LoadImage` sur l'image détourée, nœud Depth Anything V3 avec le modèle
-`DA3-Large`, normalisation `V2-Style`, sortie vers `SaveImage`. Enregistrez en
-16 bits si le nœud le propose. Le script d'export ajoute ensuite un flou de
-1,2 px : sans lui le relief 2,5D déchire sur les bords.
-
-### 4.6 Agrandissement
+### 4.5 Agrandissement
 
 `UpscaleModelLoader` avec `4x-UltraSharp`, `ImageUpscaleWithModel`, puis
 `ImageScale` vers 2048 px de haut. Aucun second passage diffusif : SeedVR2 et
@@ -301,7 +291,6 @@ Le script écrit dans `public/pieces/<id>/` :
 
 - `ferme-512.avif`, `ferme-1024.avif`, `ferme-2048.avif`, et les WebP
 - `coupe-*.avif` et `coupe-*.webp`
-- `profondeur-ferme.png`, `profondeur-coupe.png` en 1024, 8 bits, flou 1,2
 
 Le hero charge `ferme-2048` sur desktop et `ferme-1024` sur mobile. La
 collection charge `1024` partout, en `loading="lazy"`.
@@ -309,3 +298,53 @@ collection charge `1024` partout, en `loading="lazy"`.
 En attendant vos rendus, `node scripts/garde-citron.mjs` fabrique une image de
 garde du citron. Vos fichiers dans `rendus/citron/` l'écrasent au prochain
 export.
+
+## 9. La vidéo de coupe du hero
+
+Le hero ne découpe pas la photo en deux moitiés : il joue une vidéo générée
+de la pièce qui s'ouvre, image par image, au rythme du scroll. Le site ne lit
+jamais le fichier vidéo lui-même : chercher une position dans un MP4 saccade,
+surtout sur Safari iOS. `scripts/sequence.mjs` en extrait une centaine
+d'images WebP et le composant dessine celle qui correspond à la position.
+
+### Générer la vidéo
+
+Image-to-video, jamais text-to-video : la première image est votre rendu
+fermé du citron, donc le hero reste cohérent avec la collection. Si le modèle
+accepte aussi une dernière image, donnez-lui le rendu de la coupe ; la
+cohérence de l'intérieur en dépend.
+
+| Outil | Première image | Dernière image | Remarque |
+|---|---|---|---|
+| Kling 2.x | oui | oui | Le plus sûr pour la coupe, grâce à la dernière image |
+| MiniMax Hailuo 02 | oui | selon la version | Bon rendu matière, vérifiez l'option de fin |
+| Wan 2.2 (ComfyUI, local) | oui | avec le workflow FLF2V | Gratuit sur la 4070 Ti, plus lent |
+
+Réglages : 5 à 6 secondes, 1080p, caméra fixe. Prompt :
+
+```
+Static camera, locked off, studio product shot, no camera movement.
+A thin knife enters from the top and cuts the lemon-shaped pastry cleanly
+in half. The two halves slide apart slowly, revealing the cross-section:
+thin white chocolate shell, bright yellow lemon cream, pale almond sponge.
+Lighting, plinth and background stay exactly the same. No hands, no text.
+```
+
+La caméra doit rester immobile. Un travelling, même léger, fait sauter le
+scrub d'une image à l'autre. Refusez toute version où le socle bouge, où une
+main apparaît, ou où l'intérieur ne correspond pas au rendu de la coupe.
+
+### Découper la vidéo
+
+```bash
+# demande ffmpeg
+node scripts/sequence.mjs citron              # 20 images par seconde, 1080 px
+node scripts/sequence.mjs citron --fps 24     # plus fin, plus lourd
+```
+
+Le script écrit `public/sequences/citron/coupe-000.webp` et suivants, plus
+`manifeste.json`. Une centaine d'images à 1080 px pèse autour de 4 Mo ; le
+composant charge la première et la dernière d'abord, puis les milieux, et
+dessine dès trois images. En attendant votre vidéo, `node
+scripts/garde-sequence.mjs` fabrique une séquence de garde depuis les images
+de garde.

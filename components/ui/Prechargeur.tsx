@@ -25,7 +25,7 @@ export function Prechargeur() {
     const debut = performance.now();
     const images = [
       imagePiece("citron", "ferme", 1024, "webp"),
-      imagePiece("citron", "coupe", 1024, "webp"),
+      "/sequences/citron/coupe-000.webp",
     ].map(
       (src) =>
         new Promise<void>((resoudre) => {
