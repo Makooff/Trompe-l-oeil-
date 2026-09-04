@@ -11,21 +11,17 @@ import { CatmullRomCurve3, Vector3 } from "three";
 const positions = [
   new Vector3(0, 1.6, 5.4), // 00 Seuil, face à l'affiche
   new Vector3(0.2, 1.45, 3.3), // 01 Vitrine, on s'approche de la pièce
-  new Vector3(1.5, 1.3, 1.8), // dérive latérale : le relief et le trapèze se trahissent
-  new Vector3(0.4, 1.5, 1.2), // 02 Le Mensonge, au ras des pièces
-  new Vector3(0, 1.7, 3.6), // 03 Anamorphose, recul au point d'ancrage
-  new Vector3(0, 1.55, 2.4), // 04 Matières
-  new Vector3(0, 1.55, 4.2), // 05-06 Carte et Maison, la scène s'éloigne
+  new Vector3(1.5, 1.3, 1.8), // dérive latérale : le relief se trahit
+  new Vector3(0.6, 1.5, 3.0), // 02 Le Mensonge, la salle en fond de collection
+  new Vector3(0.6, 1.5, 3.0), // 03-04 Carte et Maison : la scène s'efface sans bouger
 ];
 
 const cibles = [
   new Vector3(0, 1.6, 0),
   new Vector3(0.45, 1.1, -1.6),
   new Vector3(0.5, 1.0, -1.6),
-  new Vector3(0, 1.1, -1.2),
-  new Vector3(0, 1.6, -2.2),
-  new Vector3(0, 1.4, -1.4),
-  new Vector3(0, 1.5, -2),
+  new Vector3(0.2, 1.2, -2.2),
+  new Vector3(0.2, 1.2, -2.2),
 ];
 
 export const railPosition = new CatmullRomCurve3(positions, false, "catmullrom", 0.4);

@@ -19,6 +19,8 @@ export function SceneHost() {
   // Tier pas encore décidé au premier rendu : on ne monte rien plutôt qu'une
   // scène à remplacer dans la foulée.
   if (tier === null) return null;
+  // Le tier réduit joue la coupe en CSS (HeroCoupe), sans WebGL.
+  if (tier === "reduit") return null;
   // La scène appartient à l'accueil. Une 404 reste une page de texte.
   if (chemin !== "/") return null;
 

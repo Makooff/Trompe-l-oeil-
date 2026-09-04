@@ -3,6 +3,7 @@ import { Bodoni_Moda, Geist, Geist_Mono } from "next/font/google";
 import { GrainOverlay } from "@/components/ui/GrainOverlay";
 import { ScrollDriver } from "@/components/ScrollDriver";
 import { SceneHost } from "@/components/scene/SceneHost";
+import { ThemeColor } from "@/components/ThemeColor";
 import { maison } from "@/content/maison";
 import "./globals.css";
 
@@ -58,6 +59,7 @@ export default function RootLayout({
           Aller à la carte
         </a>
         <ScrollDriver />
+        <ThemeColor />
         <SceneHost />
         {children}
         <GrainOverlay />

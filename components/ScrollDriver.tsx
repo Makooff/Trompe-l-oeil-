@@ -28,7 +28,7 @@ export function ScrollDriver() {
     // Le jour tient pendant le Seuil, puis tombe sur toute la Vitrine.
     const debutNuit = acteParId.seuil.fin;
     const finNuit = acteParId.vitrine.fin;
-    const sortieScene = acteParId.matieres.fin;
+    const sortieScene = acteParId.mensonge.fin;
 
     let precedente = -1;
     let jourEcrit = -1;
@@ -62,7 +62,11 @@ export function ScrollDriver() {
       }
     };
 
-    if (mouvementReduit) {
+    const tactile = window.matchMedia("(pointer: coarse)").matches;
+
+    // Sans Lenis en mouvement réduit, et sans Lenis en tactile : le
+    // défilement natif d'iOS est déjà lissé, un second lissage le rend mou.
+    if (mouvementReduit || tactile) {
       const onScroll = () => {
         if (rafId) return;
         rafId = requestAnimationFrame((t) => {

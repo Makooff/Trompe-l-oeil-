@@ -15,6 +15,7 @@ function jourCourant() {
 
 const AMBIANT = { jour: 1.05, nuit: 0.06 };
 const DIRECTE = { jour: 2.2, nuit: 0.45 };
+const ENVIRONNEMENT = { jour: 1, nuit: 0.14 };
 
 /**
  * Éclairage procédural, sans aucun HDRI téléchargé. Des Lightformers dessinent
@@ -26,9 +27,9 @@ const DIRECTE = { jour: 2.2, nuit: 0.45 };
 export function Lighting() {
   const ambiant = useRef<AmbientLight>(null);
   const directe = useRef<DirectionalLight>(null);
-
-  useFrame(() => {
+  useFrame(({ scene }) => {
     const j = jourCourant();
+    scene.environmentIntensity = MathUtils.lerp(ENVIRONNEMENT.nuit, ENVIRONNEMENT.jour, j);
     if (ambiant.current) {
       ambiant.current.intensity = MathUtils.lerp(AMBIANT.nuit, AMBIANT.jour, j);
     }
