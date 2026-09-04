@@ -1,0 +1,127 @@
+@import "tailwindcss";
+@import "./styles/tokens.css";
+
+/* --- Base ------------------------------------------------------------- */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background-color: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  font-size: var(--t-corps);
+  line-height: var(--lh-corps);
+  overflow-x: hidden;
+  /* La bascule jour -> nuit est pilotee au scroll, mais on garde une
+     transition courte pour les sauts d'ancre au clavier. */
+  transition:
+    background-color var(--d-3) var(--ease),
+    color var(--d-3) var(--ease);
+}
+
+::selection {
+  background-color: var(--or);
+  color: var(--bg);
+}
+
+:focus-visible {
+  outline: 2px solid var(--or);
+  outline-offset: 3px;
+}
+
+/* --- Typographie ------------------------------------------------------ */
+
+.t-display-xl,
+.t-display-l,
+.t-display-m {
+  font-family: var(--font-bodoni), ui-serif, Georgia, serif;
+  font-weight: 500;
+  margin: 0;
+}
+
+.t-display-xl {
+  font-size: var(--t-display-xl);
+  line-height: var(--lh-display-xl);
+  letter-spacing: var(--ls-display-xl);
+}
+
+.t-display-l {
+  font-size: var(--t-display-l);
+  line-height: var(--lh-display-l);
+  letter-spacing: var(--ls-display-l);
+}
+
+.t-display-m {
+  font-size: var(--t-display-m);
+  line-height: var(--lh-display-m);
+}
+
+.t-corps-l {
+  font-size: var(--t-corps-l);
+  line-height: 1.55;
+}
+
+.t-cartel {
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: var(--t-cartel);
+  line-height: 1.4;
+  letter-spacing: var(--ls-cartel);
+  text-transform: uppercase;
+}
+
+.mesure {
+  max-width: var(--mesure);
+}
+
+/* --- Grain de platre --------------------------------------------------
+   Les aplats cessent d'etre du noir d'ecran et deviennent de la peinture. */
+
+.grain {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  pointer-events: none;
+  opacity: 0.035;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* --- Fausse ombre -----------------------------------------------------
+   L'ombre ne correspond pas a la geometrie de la carte. Au survol elle se
+   corrige. Trompe-l'oeil discret, lisible a la deuxieme lecture. */
+
+.fausse-ombre {
+  transition:
+    box-shadow var(--d-3) var(--ease),
+    border-color var(--d-2) var(--ease),
+    transform var(--d-2) var(--ease);
+  box-shadow: -18px 22px 0 -14px var(--trait-fort);
+}
+
+.fausse-ombre:hover,
+.fausse-ombre:focus-within {
+  box-shadow: 10px 14px 0 -12px var(--trait-fort);
+}
+
+/* --- Mouvement reduit --------------------------------------------------
+   Aucun contenu perdu : seules les animations tombent. */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
