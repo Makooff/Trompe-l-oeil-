@@ -138,3 +138,21 @@ html.lenis body {
     scroll-behavior: auto !important;
   }
 }
+
+/* Révélation par masque de ligne. Une seule animation d'entrée pour le site. */
+
+.reveal {
+  clip-path: inset(0 0 100% 0);
+  transform: translateY(12px);
+  opacity: 0;
+  transition:
+    clip-path var(--d-3) var(--ease),
+    transform var(--d-3) var(--ease),
+    opacity var(--d-2) var(--ease);
+}
+
+.reveal[data-visible] {
+  clip-path: inset(0 0 -0.2em 0);
+  transform: none;
+  opacity: 1;
+}

@@ -10,8 +10,8 @@ import { CatmullRomCurve3, Vector3 } from "three";
  */
 const positions = [
   new Vector3(0, 1.6, 5.4), // 00 Seuil, face à l'affiche
-  new Vector3(0, 1.6, 4.9), // 01 Vitrine, on avance à peine
-  new Vector3(1.9, 1.45, 3.1), // dérive latérale : le trapèze se trahit
+  new Vector3(0.2, 1.45, 3.3), // 01 Vitrine, on s'approche de la pièce
+  new Vector3(1.5, 1.3, 1.8), // dérive latérale : le relief et le trapèze se trahissent
   new Vector3(0.4, 1.5, 1.2), // 02 Le Mensonge, au ras des pièces
   new Vector3(0, 1.7, 3.6), // 03 Anamorphose, recul au point d'ancrage
   new Vector3(0, 1.55, 2.4), // 04 Matières
@@ -20,8 +20,8 @@ const positions = [
 
 const cibles = [
   new Vector3(0, 1.6, 0),
-  new Vector3(0, 1.55, -0.4),
-  new Vector3(0, 1.35, -1.6),
+  new Vector3(0.45, 1.1, -1.6),
+  new Vector3(0.5, 1.0, -1.6),
   new Vector3(0, 1.1, -1.2),
   new Vector3(0, 1.6, -2.2),
   new Vector3(0, 1.4, -1.4),
