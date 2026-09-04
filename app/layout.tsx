@@ -50,7 +50,12 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="fr-BE">
+    <html lang="fr-BE" suppressHydrationWarning>
+      <head>
+        {/* Marque la présence de JavaScript avant le premier rendu : les
+            révélations ne masquent le texte que si un script pourra le montrer. */}
+        <script dangerouslySetInnerHTML={{ __html: "document.documentElement.classList.add('js')" }} />
+      </head>
       <body
         className={`${bodoni.variable} ${geistSans.variable} ${geistMono.variable} antialiased`}
       >

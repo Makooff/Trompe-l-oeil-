@@ -140,9 +140,10 @@ html.lenis body {
   }
 }
 
-/* Révélation par masque de ligne. Une seule animation d'entrée pour le site. */
+/* Révélation par masque de ligne. Une seule animation d'entrée pour le site.
+   Le masque ne s'applique qu'avec JavaScript : sans lui, tout reste lisible. */
 
-.reveal {
+html.js .reveal {
   clip-path: inset(0 0 100% 0);
   transform: translateY(12px);
   opacity: 0;
@@ -152,7 +153,7 @@ html.lenis body {
     opacity var(--d-2) var(--ease);
 }
 
-.reveal[data-visible] {
+html.js .reveal[data-visible] {
   clip-path: inset(0 0 -0.2em 0);
   transform: none;
   opacity: 1;
