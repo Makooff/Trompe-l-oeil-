@@ -130,3 +130,8 @@ a {
     transition-duration: 0.01ms !important;
   }
 }
+
+/* La fiche en fenêtre : la grille reste visible, voilée. */
+dialog[data-fiche]::backdrop {
+  background-color: rgb(246 245 242 / 0.82);
+}
