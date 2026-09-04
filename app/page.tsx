@@ -55,7 +55,7 @@ export default function Page() {
       </section>
 
       {/* 01. La Vitrine. La lumière tombe et la pièce se coupe derrière le texte. */}
-      <section id="vitrine" aria-labelledby="vitrine-titre" className={acte}>
+      <section id="vitrine" aria-labelledby="vitrine-titre" className={acte} data-curseur="lame">
         <ActeHeading acte={acteParId.vitrine} />
         {/* Grand écran : la coupe se joue dans le canvas derrière le texte.
             Tactile : HeroCoupe la joue en CSS, sans WebGL. */}

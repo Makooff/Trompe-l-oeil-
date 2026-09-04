@@ -157,3 +157,67 @@ html.lenis body {
   transform: none;
   opacity: 1;
 }
+
+/* Préchargeur. Le signe se trace, puis le voile s'efface. L'animation CSS de
+   secours le retire même sans JavaScript. */
+
+.prechargeur {
+  transition: opacity var(--d-3) var(--ease);
+  animation: prechargeur-secours 0s linear 3.2s forwards;
+}
+
+.prechargeur[data-pret] {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.prechargeur-trait {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: prechargeur-tracer 620ms var(--ease) forwards;
+}
+
+@keyframes prechargeur-tracer {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes prechargeur-secours {
+  to {
+    visibility: hidden;
+    opacity: 0;
+    pointer-events: none;
+  }
+}
+
+/* Curseur lame. Un trait de 1 px qui remplace le curseur sur les zones de
+   coupe, pointeur fin seulement. */
+
+.curseur {
+  position: fixed;
+  top: -14px;
+  left: 0;
+  width: 1px;
+  height: 28px;
+  background: var(--fg);
+  pointer-events: none;
+  z-index: 65;
+  opacity: 0;
+  transition: opacity var(--d-2) var(--ease);
+}
+
+.curseur[data-actif] {
+  opacity: 1;
+}
+
+html.curseur-lame,
+html.curseur-lame * {
+  cursor: none !important; /* remplace le curseur système sur la zone de coupe */
+}
+
+@media (pointer: coarse) {
+  .curseur {
+    display: none;
+  }
+}

@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Bodoni_Moda, Geist, Geist_Mono } from "next/font/google";
+import { Curseur } from "@/components/ui/Curseur";
 import { GrainOverlay } from "@/components/ui/GrainOverlay";
+import { Prechargeur } from "@/components/ui/Prechargeur";
 import { ScrollDriver } from "@/components/ScrollDriver";
 import { SceneHost } from "@/components/scene/SceneHost";
 import { ThemeColor } from "@/components/ThemeColor";
@@ -62,7 +64,9 @@ export default function RootLayout({
         <ThemeColor />
         <SceneHost />
         {children}
+        <Curseur />
         <GrainOverlay />
+        <Prechargeur />
       </body>
     </html>
   );
