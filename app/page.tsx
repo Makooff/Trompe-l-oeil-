@@ -21,16 +21,24 @@ const acte =
   "px-[var(--gouttiere)] py-[var(--rythme-acte)] max-w-[80rem] mx-auto";
 
 /**
- * Emplacement d'un acte 3D. Un aplat, sans bordure ni libellé : le vide assumé
- * vaut mieux qu'une étiquette de maquette. La scène vient l'occuper.
+ * Emplacement d'un acte 3D.
+ *
+ * Par défaut il ne peint rien : c'est une fenêtre, le canvas persistant passe
+ * au travers. `plein` garde un aplat là où la scène n'est pas encore posée,
+ * pour ne pas laisser un trou dans la page.
  */
-function Socle({ ratio }: { ratio: string }) {
-  return <div className={`${ratio} w-full bg-bg-eleve`} aria-hidden="true" />;
+function Socle({ ratio, plein = false }: { ratio: string; plein?: boolean }) {
+  return (
+    <div
+      className={`${ratio} w-full ${plein ? "bg-bg-eleve" : ""}`}
+      aria-hidden="true"
+    />
+  );
 }
 
 export default function Page() {
   return (
-    <main>
+    <main className="relative z-10">
       {/* 00 — Seuil. Plein jour, plat comme une affiche.
           Une seule dominante : le nom. Pas de cadre — le blanc porte l'affiche. */}
       <section
@@ -97,7 +105,7 @@ export default function Page() {
         <ul className="grid gap-6 grid-cols-2 lg:grid-cols-4 list-none p-0 m-0">
           {MATIERES.map((m) => (
             <li key={m}>
-              <Socle ratio="aspect-square" />
+              <Socle ratio="aspect-square" plein />
               <p className="t-cartel text-fg-70 mt-4 mb-0">{m}</p>
             </li>
           ))}

@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import { Bodoni_Moda, Geist, Geist_Mono } from "next/font/google";
 import { GrainOverlay } from "@/components/ui/GrainOverlay";
-import { JourNuit } from "@/components/JourNuit";
+import { ScrollDriver } from "@/components/ScrollDriver";
+import { SceneHost } from "@/components/scene/SceneHost";
 import { maison } from "@/content/maison";
 import "./globals.css";
 
@@ -48,7 +49,8 @@ export default function RootLayout({
         >
           Aller à la carte
         </a>
-        <JourNuit />
+        <ScrollDriver />
+        <SceneHost />
         {children}
         <GrainOverlay />
       </body>

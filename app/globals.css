@@ -28,6 +28,16 @@ body {
     color var(--d-3) var(--ease);
 }
 
+/* Lenis pilote le scroll : la page ne doit pas imposer sa propre hauteur. */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
 ::selection {
   background-color: var(--or);
   color: var(--bg);
