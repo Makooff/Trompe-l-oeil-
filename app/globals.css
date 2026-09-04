@@ -12,213 +12,121 @@
 html {
   -webkit-text-size-adjust: 100%;
   -webkit-tap-highlight-color: transparent;
+  scroll-behavior: smooth;
 }
 
 body {
   margin: 0;
   background-color: var(--bg);
   color: var(--fg);
-  font-family: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  font-family: var(--font-hanken), ui-sans-serif, system-ui, sans-serif;
   font-size: var(--t-corps);
   line-height: var(--lh-corps);
+  font-weight: 400;
   overflow-x: hidden;
-  /* Le scroll pilote la bascule jour vers nuit. On garde une transition
-     courte pour les sauts d'ancre au clavier. */
-  transition:
-    background-color var(--d-3) var(--ease),
-    color var(--d-3) var(--ease);
-}
-
-/* Lenis pilote le scroll, donc la page ne doit pas imposer sa hauteur. */
-html.lenis,
-html.lenis body {
-  height: auto;
-}
-
-.lenis.lenis-stopped {
-  overflow: hidden;
 }
 
 ::selection {
-  background-color: var(--or);
-  color: var(--bg);
+  background-color: var(--noir);
+  color: var(--blanc);
 }
 
 :focus-visible {
-  outline: 2px solid var(--or);
+  outline: 1.5px solid var(--noir);
   outline-offset: 3px;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
 }
 
 /* Typographie */
 
-.t-display-xl,
-.t-display-l,
-.t-display-m,
-.t-display-s {
-  font-family: var(--font-bodoni), ui-serif, Georgia, serif;
-  font-weight: 500;
+.t-grand {
+  font-size: var(--t-grand);
+  line-height: var(--lh-grand);
+  letter-spacing: var(--ls-grand);
+  font-weight: 300;
   margin: 0;
 }
 
-.t-display-xl {
-  font-size: var(--t-display-xl);
-  line-height: var(--lh-display-xl);
-  letter-spacing: var(--ls-display-xl);
+.t-moyen {
+  font-size: var(--t-moyen);
+  line-height: var(--lh-moyen);
+  font-weight: 300;
+  margin: 0;
 }
 
-.t-display-l {
-  font-size: var(--t-display-l);
-  line-height: var(--lh-display-l);
-  letter-spacing: var(--ls-display-l);
+.t-petit-titre {
+  font-size: var(--t-petit-titre);
+  line-height: 1.35;
+  font-weight: 400;
+  margin: 0;
 }
 
-.t-display-m {
-  font-size: var(--t-display-m);
-  line-height: var(--lh-display-m);
-}
-
-.t-display-s {
-  font-size: var(--t-display-s);
-  line-height: var(--lh-display-s);
-}
-
-.t-corps-l {
-  font-size: var(--t-corps-l);
-  line-height: 1.55;
-}
-
-.t-cartel {
-  font-family: var(--font-geist-mono), ui-monospace, monospace;
-  font-size: var(--t-cartel);
+.t-etiquette {
+  font-size: var(--t-etiquette);
   line-height: 1.4;
-  letter-spacing: var(--ls-cartel);
+  letter-spacing: var(--ls-etiquette);
   text-transform: uppercase;
+  font-weight: 500;
+}
+
+.t-etiquette-l {
+  font-size: var(--t-etiquette-l);
+  line-height: 1.4;
+  letter-spacing: var(--ls-etiquette);
+  text-transform: uppercase;
+  font-weight: 500;
 }
 
 .mesure {
   max-width: var(--mesure);
 }
 
-/* Grain de plâtre. Il donne aux aplats une matière peinte au lieu d'un noir
-   d'écran. */
+/* Lien souligné au survol, un trait fin qui part de la gauche. */
 
-.grain {
-  position: fixed;
-  inset: 0;
-  z-index: 60;
-  pointer-events: none;
-  opacity: 0.04;
-  mix-blend-mode: overlay;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)'/%3E%3C/svg%3E");
+.lien {
+  position: relative;
 }
 
-/* Fausse ombre. Son angle contredit la géométrie de la carte, et le survol la
-   corrige. Le visiteur le remarque à la deuxième lecture. */
+.lien::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -2px;
+  height: 1px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--d-2) var(--ease);
+}
 
-@media (min-width: 48rem) {
-  .fausse-ombre {
-    transition: box-shadow var(--d-3) var(--ease);
-    box-shadow: -10px 14px 0 -9px var(--trait-fort);
-  }
-
-  .fausse-ombre:hover,
-  .fausse-ombre:focus-within {
-    box-shadow: 8px 12px 0 -9px var(--trait-fort);
-  }
+.lien:hover::after,
+.lien:focus-visible::after,
+.lien[aria-current="page"]::after {
+  transform: scaleX(1);
 }
 
 /* Mouvement réduit. Les animations tombent, le contenu reste entier. */
 
 @media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
   *,
   *::before,
   *::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
-    scroll-behavior: auto !important;
-  }
-}
-
-/* Révélation par masque de ligne. Une seule animation d'entrée pour le site.
-   Le masque ne s'applique qu'avec JavaScript : sans lui, tout reste lisible. */
-
-html.js .reveal {
-  clip-path: inset(0 0 100% 0);
-  transform: translateY(12px);
-  opacity: 0;
-  transition:
-    clip-path var(--d-3) var(--ease),
-    transform var(--d-3) var(--ease),
-    opacity var(--d-2) var(--ease);
-}
-
-html.js .reveal[data-visible] {
-  clip-path: inset(0 0 -0.2em 0);
-  transform: none;
-  opacity: 1;
-}
-
-/* Préchargeur. Le signe se trace, puis le voile s'efface. L'animation CSS de
-   secours le retire même sans JavaScript. */
-
-.prechargeur {
-  transition: opacity var(--d-3) var(--ease);
-  animation: prechargeur-secours 0s linear 3.2s forwards;
-}
-
-.prechargeur[data-pret] {
-  opacity: 0;
-  pointer-events: none;
-}
-
-.prechargeur-trait {
-  stroke-dasharray: 1;
-  stroke-dashoffset: 1;
-  animation: prechargeur-tracer 620ms var(--ease) forwards;
-}
-
-@keyframes prechargeur-tracer {
-  to {
-    stroke-dashoffset: 0;
-  }
-}
-
-@keyframes prechargeur-secours {
-  to {
-    visibility: hidden;
-    opacity: 0;
-    pointer-events: none;
-  }
-}
-
-/* Curseur lame. Un trait de 1 px qui remplace le curseur sur les zones de
-   coupe, pointeur fin seulement. */
-
-.curseur {
-  position: fixed;
-  top: -14px;
-  left: 0;
-  width: 1px;
-  height: 28px;
-  background: var(--fg);
-  pointer-events: none;
-  z-index: 65;
-  opacity: 0;
-  transition: opacity var(--d-2) var(--ease);
-}
-
-.curseur[data-actif] {
-  opacity: 1;
-}
-
-html.curseur-lame,
-html.curseur-lame * {
-  cursor: none !important; /* remplace le curseur système sur la zone de coupe */
-}
-
-@media (pointer: coarse) {
-  .curseur {
-    display: none;
   }
 }

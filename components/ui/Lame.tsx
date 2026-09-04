@@ -50,7 +50,7 @@ export function Lame({
     <div
       ref={cadre}
       data-curseur="lame"
-      className={`relative select-none overflow-hidden bg-bg-eleve ${className}`}
+      className={`relative select-none overflow-hidden bg-fond-doux ${className}`}
       style={{ touchAction: "pan-y" }}
       onPointerDown={(e) => {
         e.currentTarget.setPointerCapture(e.pointerId);
@@ -74,7 +74,7 @@ export function Lame({
           loading="lazy"
           decoding="async"
           draggable={false}
-          className="absolute inset-0 h-full w-full object-contain"
+          className="absolute inset-0 h-full w-full object-contain p-[6%]"
         />
       </picture>
 
@@ -90,19 +90,19 @@ export function Lame({
             loading="lazy"
             decoding="async"
             draggable={false}
-            className="absolute inset-0 h-full w-full object-contain"
+            className="absolute inset-0 h-full w-full object-contain p-[6%]"
           />
         </picture>
       </div>
 
-      {/* Le trait : 1 px de plâtre, une pastille d'or au milieu. */}
+      {/* Le trait : 1 px de noir, une pastille au milieu. */}
       <div
         ref={trait}
-        className="absolute inset-y-0 w-px bg-fg pointer-events-none"
+        className="absolute inset-y-0 w-px bg-noir pointer-events-none"
         style={{ left: `${DEPART}%` }}
         aria-hidden="true"
       >
-        <span className="absolute left-1/2 top-1/2 h-1.5 w-1.5 -translate-x-1/2 -translate-y-1/2 rounded-[var(--r-pill)] bg-or" />
+        <span className="absolute left-1/2 top-1/2 h-2 w-2 -translate-x-1/2 -translate-y-1/2 rounded-full bg-noir" />
       </div>
 
       {/* Le curseur accessible, invisible mais focusable, 44 px de large. */}
@@ -115,7 +115,7 @@ export function Lame({
         aria-valuenow={valeur}
         aria-valuetext={`${valeur} % coupé`}
         aria-describedby={etiquette}
-        className="absolute inset-y-0 w-11 -translate-x-1/2 bg-transparent border-0 p-0 cursor-col-resize focus-visible:outline-2 focus-visible:outline-or"
+        className="absolute inset-y-0 w-11 -translate-x-1/2 bg-transparent border-0 p-0 cursor-col-resize focus-visible:outline-2 focus-visible:outline-noir"
         style={{ left: `${valeur}%` }}
         onKeyDown={(e) => {
           let v = position.current;

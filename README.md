@@ -1,21 +1,20 @@
 # Maison Leurre
 
-Site vitrine d'une pâtisserie trompe-l'œil à Mons. Huit pièces copient des
-objets qu'on ne mange pas, un citron, un caillou ou un savon, et montrent leur
-coupe quand on les ouvre.
+Site d'une pâtisserie trompe-l'œil à Mons. Des fruits et des objets qui n'en
+sont pas : coupez-les, dedans c'est un dessert.
 
-Le site applique le même procédé à lui-même. Il s'ouvre plat comme une affiche
-en plein jour, se creuse en profondeur, coupe le citron à la vitesse du scroll,
-puis bascule dans la nuit d'atelier. Une lame passe sur chaque pièce de la
-collection.
+Blanc, une seule sans-serif, des photos de produits sur fond clair, une
+navigation classique et une commande en click & collect. Sur l'accueil, le
+citron s'ouvre en deux quand on descend ; sur chaque fiche, une lame coupe la
+pièce sous le doigt.
 
 Le client n'a pas encore de photos : `docs/comfyui.md` explique comment les
 produire sur une RTX 4070 Ti, et le site les accepte au fur et à mesure.
 
 ## Stack
 
-Next.js 16 (App Router, TypeScript), Tailwind CSS v4, React Three Fiber avec
-drei, Lenis.
+Next.js 16 (App Router, TypeScript), Tailwind CSS v4, Hanken Grotesk via
+`next/font`. Aucun WebGL, aucune bibliothèque d'animation.
 
 ```bash
 npm install
@@ -23,63 +22,54 @@ npm run dev     # http://localhost:3000
 npm run build
 ```
 
+## Pages
+
+| Route | Contenu |
+|---|---|
+| `/` | Le citron qui s'ouvre au scroll, les deux collections, la grille des huit pièces, la lame sur la cerise, la boutique. |
+| `/patisseries` | La grille, filtrable par collection (`?collection=fruit` ou `objet`). |
+| `/patisseries/[id]` | La fiche : lame, prix, composition, allergènes, ajout au panier. |
+| `/panier` | Le panier et le formulaire de retrait en boutique. |
+| `/la-maison` | L'atelier, l'adresse, les horaires. |
+
 ## Structure
 
 | Chemin | Rôle |
 |---|---|
-| `app/styles/tokens.css` | Le design system entier. Aucune valeur visuelle ailleurs. |
-| `content/` | La maison, les huit créations, les sept actes. |
-| `components/ui/` | Composants 2D. |
-| `components/scene/` | La scène 3D, sur un canvas unique et persistant : l'affiche qui se décolle et la salle. |
-| `components/ui/SequenceCoupe.tsx` | La coupe du hero : une séquence d'images pilotée par le scroll, même code partout. |
-| `docs/comfyui.md` | Guide de production des images, prompts des huit pièces. |
-| `scripts/` | Export des rendus (`pieces.mjs`), découpe de la vidéo (`sequence.mjs`), marque, images de garde. |
-| `lib/scroll/` | Bornes des actes et progression, partagées par le 2D et la 3D. |
-| `public/models/` | Slot GLTF pour remplacer les géométries procédurales. |
-
-## La bascule jour vers nuit
-
-Le scroll écrit une seule variable, `--jour`, qui descend de 1 à 0 sur
-`<html>`. Les couleurs en dérivent par `color-mix` et les intensités de lumière
-3D s'interpolent sur la même valeur. Vous réglez un curseur au lieu de
-maintenir deux thèmes.
-
-## Les actes
-
-`content/actes.ts` déclare les cinq actes et leurs bornes de scroll. Le 2D et la
-scène 3D lisent les mêmes bornes, donc déplacer une plage les déplace des deux
-côtés.
-
-## Les images des pièces
-
-`public/pieces/<id>/` contient, par pièce, la photo fermée et la coupe en trois
-tailles. `public/sequences/citron/` contient la vidéo de coupe découpée en
-images. `lib/pieces.ts` liste les pièces déjà rendues ; les autres montrent un
-socle vide en attendant. `scripts/garde-citron.mjs` et `scripts/garde-sequence.mjs`
-fabriquent des images de garde pour tester la mécanique.
+| `app/styles/tokens.css` | Le design system entier : couleurs, échelle typographique, rythme. |
+| `content/` | La maison et les huit créations. Tout le texte du site vit là. |
+| `components/` | Barre, pied de page, grille, carte produit, panier, lame, séquence. |
+| `lib/panier.ts` | Le panier, un store de module persisté dans localStorage. |
+| `app/api/commande/` | Reçoit commandes et inscriptions, les transmet à `COMMANDE_WEBHOOK_URL`. |
+| `public/pieces/<id>/` | Photo fermée et coupe de chaque pièce, en trois tailles. |
+| `public/sequences/citron/` | La vidéo de coupe découpée en images pour le scroll. |
+| `scripts/` | Export des rendus, découpe de la vidéo, images de garde. |
+| `docs/comfyui.md` | Guide de production des images et de la vidéo, prompts. |
 
 ## La coupe au scroll
 
 `SequenceCoupe` dessine sur un canvas 2D l'image de la séquence qui correspond
-à la progression du bloc dans l'écran. Pas de `<video>` : chercher une position
-dans un fichier compressé saccade, surtout sur Safari iOS. Les images se
-chargent par ordre d'importance, la première et la dernière d'abord.
+au défilement. Pas de `<video>` : chercher une position dans un fichier
+compressé saccade, surtout sur Safari iOS. Les images se chargent par ordre
+d'importance, la première et la dernière d'abord.
 
-## Deux niveaux de rendu
+## Les commandes
 
-`lib/perf/useTier.ts` décide au montage. Le tier complet monte le canvas WebGL
-pour l'affiche qui se décolle et la salle. Le tier réduit, sur petit écran ou
-pointeur grossier, ne monte aucun WebGL ; la coupe, elle, est la même partout.
+Le panier vit dans le navigateur. À la validation, `/api/commande` reçoit la
+commande et la transmet en JSON au webhook défini dans `COMMANDE_WEBHOOK_URL`
+(Make, Zapier, n8n, Formspree, ou un service d'e-mail). Sans webhook, la
+commande est journalisée côté serveur et le site reste utilisable en
+démonstration. Le paiement se fait en boutique au retrait.
 
-## La progression du scroll
+## Variables d'environnement
 
-`lib/scroll/scrollStore.ts` garde la progression dans un objet mutable de
-module. La scène la lit dans `useFrame` soixante fois par seconde, et un
-setState par frame rerendrait tout l'arbre React.
+| Variable | Rôle |
+|---|---|
+| `NEXT_PUBLIC_ORIGINE` | L'URL publique, pour le sitemap, robots et les métadonnées. |
+| `COMMANDE_WEBHOOK_URL` | Où envoyer les commandes et les inscriptions. |
 
-## Accessibilité
+## Images de garde
 
-Le canvas porte `aria-hidden`. La carte, les cartels et l'adresse existent en
-HTML rendu côté serveur : sans JavaScript ni WebGL, vous gardez le contenu.
-`prefers-reduced-motion` coupe le scroll lissé et le rail caméra sans retirer
-une ligne de texte.
+`node scripts/garde-pieces.mjs` puis `node scripts/pieces.mjs` fabriquent une
+forme simple par pièce ; `node scripts/garde-sequence.mjs` fabrique la
+séquence du citron. Vos rendus dans `rendus/` les écrasent.

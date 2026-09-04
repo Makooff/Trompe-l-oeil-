@@ -1,29 +1,15 @@
 import type { Metadata } from "next";
-import { Bodoni_Moda, Geist, Geist_Mono } from "next/font/google";
-import { Curseur } from "@/components/ui/Curseur";
-import { GrainOverlay } from "@/components/ui/GrainOverlay";
-import { Prechargeur } from "@/components/ui/Prechargeur";
-import { ScrollDriver } from "@/components/ScrollDriver";
-import { SceneHost } from "@/components/scene/SceneHost";
-import { ThemeColor } from "@/components/ThemeColor";
+import { Hanken_Grotesk } from "next/font/google";
+import { Footer } from "@/components/Footer";
+import { Nav } from "@/components/Nav";
+import { Scroll } from "@/components/Scroll";
 import { maison } from "@/content/maison";
 import "./globals.css";
 
-const bodoni = Bodoni_Moda({
-  variable: "--font-bodoni",
+const hanken = Hanken_Grotesk({
+  variable: "--font-hanken",
   subsets: ["latin"],
-  display: "swap",
-});
-
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-  display: "swap",
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+  weight: ["300", "400", "500"],
   display: "swap",
 });
 
@@ -32,46 +18,33 @@ const ORIGINE = process.env.NEXT_PUBLIC_ORIGINE ?? "https://maisonleurre.be";
 export const metadata: Metadata = {
   metadataBase: new URL(ORIGINE),
   title: {
-    default: `${maison.nom}, pâtisserie trompe-l'œil à Mons`,
+    default: `${maison.nom}, ${maison.accroche}`,
     template: `%s · ${maison.nom}`,
   },
-  description: maison.chapo,
+  description: maison.presentation,
   openGraph: {
     title: maison.nom,
-    description: maison.signature,
+    description: maison.accroche,
     locale: "fr_BE",
     type: "website",
     siteName: maison.nom,
   },
-  twitter: { card: "summary_large_image" },
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{ children: React.ReactNode }>) {
+export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="fr-BE" suppressHydrationWarning>
-      <head>
-        {/* Marque la présence de JavaScript avant le premier rendu : les
-            révélations ne masquent le texte que si un script pourra le montrer. */}
-        <script dangerouslySetInnerHTML={{ __html: "document.documentElement.classList.add('js')" }} />
-      </head>
-      <body
-        className={`${bodoni.variable} ${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
+    <html lang="fr-BE">
+      <body className={`${hanken.variable} antialiased`}>
         <a
-          href="#carte"
-          className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-70 focus:bg-or focus:text-bg focus:px-4 focus:h-11 focus:inline-flex focus:items-center t-cartel"
+          href="#contenu"
+          className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-60 focus:bg-noir focus:text-blanc focus:px-4 focus:h-11 focus:inline-flex focus:items-center t-etiquette"
         >
-          Aller à la carte
+          Aller au contenu
         </a>
-        <ScrollDriver />
-        <ThemeColor />
-        <SceneHost />
-        {children}
-        <Curseur />
-        <GrainOverlay />
-        <Prechargeur />
+        <Scroll />
+        <Nav />
+        <main id="contenu">{children}</main>
+        <Footer />
       </body>
     </html>
   );

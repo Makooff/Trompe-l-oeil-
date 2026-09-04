@@ -14,4 +14,4 @@ export function srcSetPiece(id: string, variante: VariantePiece, format: "avif" 
 }
 
 /** Pièces qui ont déjà leurs images. Les autres montrent un socle vide. */
-export const PIECES_RENDUES = new Set(["citron"]);
+export const PIECES_RENDUES = new Set(["citron", "noisette", "cerise", "poire", "caillou", "savon", "oeuf", "marbre"]);

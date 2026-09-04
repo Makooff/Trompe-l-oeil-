@@ -58,7 +58,22 @@ function ordreDeChargement(n: number): number[] {
  * Sans manifeste (pièce pas encore rendue), une image fixe de la pièce
  * fermée prend la place.
  */
-export function SequenceCoupe({ id, faux, className = "" }: { id: string; faux: string; className?: string }) {
+export function SequenceCoupe({
+  id,
+  faux,
+  pilotage = "bloc",
+  className = "",
+}: {
+  id: string;
+  faux: string;
+  /**
+   * `bloc` : la progression suit la position du bloc dans l'écran.
+   * `page` : elle suit le défilement depuis le haut de la page, pour un
+   * hero déjà à l'écran au chargement, qui doit s'ouvrir quand on descend.
+   */
+  pilotage?: "bloc" | "page";
+  className?: string;
+}) {
   const cadre = useRef<HTMLDivElement>(null);
   const canvas = useRef<HTMLCanvasElement>(null);
   const [manifeste, setManifeste] = useState<Manifeste | null | undefined>(undefined);
@@ -133,10 +148,17 @@ export function SequenceCoupe({ id, faux, className = "" }: { id: string; faux: 
 
     const mesurer = () => {
       if (reduit) return;
-      const r = el.getBoundingClientRect();
       const h = window.innerHeight;
-      const centre = r.top + r.height * CENTRE_PIECE;
-      const t = doux(clamp01((h * ENTREE - centre) / (h * (ENTREE - SORTIE))));
+      let t: number;
+      if (pilotage === "page") {
+        // La pièce est à l'écran dès le chargement : elle s'ouvre sur les
+        // deux premiers tiers d'écran de défilement.
+        t = doux(clamp01(window.scrollY / (h * 0.66)));
+      } else {
+        const r = el.getBoundingClientRect();
+        const centre = r.top + r.height * CENTRE_PIECE;
+        t = doux(clamp01((h * ENTREE - centre) / (h * (ENTREE - SORTIE))));
+      }
       cible = Math.round(t * (manifeste.images - 1));
       demander();
     };
@@ -176,7 +198,7 @@ export function SequenceCoupe({ id, faux, className = "" }: { id: string; faux: 
       stop();
       cancelAnimationFrame(raf);
     };
-  }, [manifeste, id]);
+  }, [manifeste, id, pilotage]);
 
   const ratio = manifeste ? `${manifeste.largeur} / ${manifeste.hauteur}` : "4 / 5";
 
