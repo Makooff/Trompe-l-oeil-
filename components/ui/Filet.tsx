@@ -1,4 +1,4 @@
-/** Filet gravé 1px. L'élévation passe par là, pas par une ombre lourde. */
+/** Filet gravé de 1px. L'élévation passe par lui plutôt que par une ombre. */
 export function Filet({ className = "" }: { className?: string }) {
   return (
     <hr

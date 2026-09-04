@@ -25,7 +25,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: `${maison.nom} — pâtisserie trompe-l'œil, Paris 5ᵉ`,
+  title: `${maison.nom}, pâtisserie trompe-l'œil, Paris 5ᵉ`,
   description: maison.chapo,
   openGraph: {
     title: maison.nom,

@@ -1,8 +1,8 @@
-/* Maison Leurre — design system.
+/* Maison Leurre, design system.
    Toute valeur visuelle du site sort d'ici. Rien en dur ailleurs. */
 
-/* Le curseur unique de la bascule jour -> nuit. Enregistre en <number>
-   pour etre interpolable et utilisable dans calc(). 1 = plein jour, 0 = nuit. */
+/* Le curseur de la bascule jour vers nuit. On l'enregistre en <number> pour
+   pouvoir l'interpoler et s'en servir dans calc(). 1 = plein jour, 0 = nuit. */
 @property --jour {
   syntax: "<number>";
   inherits: true;
@@ -10,7 +10,7 @@
 }
 
 :root {
-  /* --- Couleur ------------------------------------------------------- */
+  /* Couleur */
   --nuit: calc((1 - var(--jour)) * 100%);
 
   --c-jour-bg: #f2ede4;
@@ -36,7 +36,7 @@
   --trait: color-mix(in oklab, var(--fg) 13%, transparent);
   --trait-fort: color-mix(in oklab, var(--fg) 26%, transparent);
 
-  /* --- Typographie ---------------------------------------------------- */
+  /* Typographie */
   --t-display-xl: clamp(3.5rem, 11vw, 9rem);
   --t-display-l: clamp(2.25rem, 5vw, 4rem);
   --t-display-m: clamp(1.5rem, 2.5vw, 2.25rem);
@@ -57,16 +57,16 @@
 
   --mesure: 62ch;
 
-  /* --- Rythme --------------------------------------------------------- */
+  /* Rythme */
   --rythme-acte: 4rem; /* 64 mobile */
   --gouttiere: 1.25rem;
 
-  /* --- Rayons --------------------------------------------------------- */
+  /* Rayons */
   --r-0: 0px;
   --r-1: 2px;
   --r-pill: 999px;
 
-  /* --- Mouvement ------------------------------------------------------ */
+  /* Mouvement */
   --ease: cubic-bezier(0.16, 1, 0.3, 1);
   --d-1: 180ms;
   --d-2: 280ms;

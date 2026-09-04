@@ -30,7 +30,7 @@ export const actes: Acte[] = [
     titre: "Seuil",
     kicker: "Ceci est une affiche",
     chapo:
-      "Une surface plate, un mot, rien derrière. Vous n'avez pas encore commencé à descendre.",
+      "Vous regardez une affiche collée au mur. Descendez, elle se décollera.",
     debut: 0,
     fin: 0.12,
   },
@@ -38,9 +38,9 @@ export const actes: Acte[] = [
     id: "vitrine",
     numero: "01",
     titre: "La Vitrine",
-    kicker: "L'échelle ment",
+    kicker: "Vous vous trompez de taille",
     chapo:
-      "De face, la vitrine est un rectangle. Elle ne l'a jamais été. La pièce est un trapèze, et vous avez cru ce qu'on vous montrait.",
+      "De face, la vitrine forme un rectangle. Faites deux pas de côté et le trapèze apparaît. Nous avons construit la pièce pour ce point de vue et pour aucun autre.",
     debut: 0.12,
     fin: 0.3,
   },
@@ -50,7 +50,7 @@ export const actes: Acte[] = [
     titre: "Le Mensonge",
     kicker: "Ouvrez-les",
     chapo:
-      "Trois pièces s'ouvrent. Ce qu'il y a dedans n'a rien à voir avec ce qu'il y a dessus.",
+      "Trois pièces s'ouvrent au passage. Vous verrez la coupe, les couches et l'insert que la coque cachait.",
     debut: 0.3,
     fin: 0.52,
   },
@@ -60,7 +60,7 @@ export const actes: Acte[] = [
     titre: "L'Anamorphose",
     kicker: "Un seul angle",
     chapo:
-      "Mille huit cents éclats de sucre, dispersés sans ordre apparent. Il existe exactement un point de vue depuis lequel ils écrivent un mot.",
+      "Mille huit cents éclats de sucre flottent sans ordre visible. Continuez à descendre : à une position de caméra, ils composent un mot.",
     debut: 0.52,
     fin: 0.66,
   },
@@ -70,7 +70,7 @@ export const actes: Acte[] = [
     titre: "Les Matières",
     kicker: "Quatre surfaces",
     chapo:
-      "Glaçage miroir, chocolat tempéré, sucre glace, marbre. Trois se mangent. Devinez lequel non.",
+      "Glaçage miroir, chocolat tempéré, sucre glace et marbre. Le marbre vient d'une carrière, le reste sort du laboratoire.",
     debut: 0.66,
     fin: 0.78,
   },
@@ -80,7 +80,7 @@ export const actes: Acte[] = [
     titre: "La Carte",
     kicker: "Ce que c'est vraiment",
     chapo:
-      "Chaque pièce porte deux noms : celui qu'elle affiche, et celui qu'elle a.",
+      "Nous donnons deux noms à chaque pièce. Le premier vient de l'objet qu'elle copie, le second de ce que vous mangez.",
     debut: 0.78,
     fin: 0.93,
   },
@@ -89,7 +89,7 @@ export const actes: Acte[] = [
     numero: "06",
     titre: "La Maison",
     kicker: "Venir",
-    chapo: "L'atelier est ouvert. L'adresse, elle, ne triche pas.",
+    chapo: "L'atelier ouvre du mercredi au dimanche. Passez sans rendez-vous, ou réservez une table pour la dégustation.",
     debut: 0.93,
     fin: 1,
   },

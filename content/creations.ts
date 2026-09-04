@@ -1,12 +1,12 @@
 export type Creation = {
   /** Identifiant stable, sert d'ancre et de clé de géométrie procédurale. */
   id: string;
-  /** Le faux titre affiché sur le cartel — ce que la pièce prétend être. */
+  /** Le faux titre du cartel : le nom de l'objet que la pièce copie. */
   faux: string;
   annee: number;
-  /** Ce que l'œil croit voir. Une phrase, ton muséal. */
+  /** Ce que vous voyez avant de goûter. Une phrase, ton muséal. */
   apparence: string;
-  /** Ce que c'est vraiment. Liste de matière, comme un cartel de musée. */
+  /** La composition réelle, listée comme sur un cartel de musée. */
   verite: string;
   prixEuros: number;
   allergenes: string[];
@@ -23,7 +23,7 @@ export const creations: Creation[] = [
     id: "citron",
     faux: "Citron",
     annee: 2019,
-    apparence: "Un citron de Menton posé sur son socle, pore pour pore.",
+    apparence: "Un citron de Menton sur son socle, pore pour pore.",
     verite:
       "Crémeux citron de Menton, biscuit amande, coque de chocolat blanc colorée au velours",
     prixEuros: 14,
@@ -34,7 +34,7 @@ export const creations: Creation[] = [
     id: "caillou",
     faux: "Caillou",
     annee: 2020,
-    apparence: "Un galet de rivière, gris, mat, encore humide.",
+    apparence: "Un galet de rivière gris, encore humide.",
     verite: "Chou craquelin, praliné noisette, sarrasin torréfié",
     prixEuros: 9,
     allergenes: ["gluten", "lait", "fruits à coque", "œuf"],
@@ -44,7 +44,7 @@ export const creations: Creation[] = [
     id: "savon",
     faux: "Savon",
     annee: 2021,
-    apparence: "Un cube de savon de Marseille, arête usée, estampille effacée.",
+    apparence: "Un cube de savon de Marseille, l'estampille à moitié effacée.",
     verite: "Entremets olive-verveine, glaçage opaque",
     prixEuros: 16,
     allergenes: ["lait", "œuf"],
@@ -84,7 +84,7 @@ export const creations: Creation[] = [
     id: "bougie",
     faux: "Bougie",
     annee: 2023,
-    apparence: "Une bougie allumée, cire coulée, flamme droite.",
+    apparence: "Une bougie allumée, la cire déjà coulée.",
     verite: "Vacherin vanille, flamme en sucre tiré",
     prixEuros: 18,
     allergenes: ["lait", "œuf"],
@@ -94,7 +94,7 @@ export const creations: Creation[] = [
     id: "papier-froisse",
     faux: "Papier froissé",
     annee: 2024,
-    apparence: "Une feuille chiffonnée puis jetée, pliures marquées.",
+    apparence: "Une feuille de papier chiffonnée puis jetée.",
     verite: "Feuilletage inversé, crème mousseline",
     prixEuros: 11,
     allergenes: ["gluten", "lait", "œuf"],

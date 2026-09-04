@@ -2,8 +2,9 @@ import { Filet } from "./Filet";
 import type { Creation } from "@/content/creations";
 
 /**
- * Le cartel de musée. Le geste DA central : le faux titre est annoncé comme
- * une œuvre, la vérité est reléguée en petites capitales dessous.
+ * Le cartel de musée, geste central de la direction artistique. Le faux titre
+ * s'annonce comme une œuvre et la composition réelle passe en petites
+ * capitales dessous.
  */
 export function Cartel({
   creation,

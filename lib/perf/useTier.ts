@@ -5,9 +5,9 @@ import { useSyncExternalStore } from "react";
 export type Tier = "complet" | "reduit";
 
 /**
- * Mesuré une seule fois puis mémorisé. Une scène qui change de tier en plein
- * scroll recompilerait ses shaders au pire moment, et `getSnapshot` doit de
- * toute façon renvoyer une valeur stable.
+ * On mesure une fois et on garde le résultat. Une scène qui change de tier en
+ * plein scroll recompile ses shaders au pire moment, et `getSnapshot` doit
+ * renvoyer une valeur stable.
  */
 let mesure: Tier | null = null;
 
@@ -21,14 +21,14 @@ function lire(): Tier {
   return mesure;
 }
 
-// Le tier ne change jamais en cours de session : rien à quoi s'abonner.
+// Le tier reste fixe pour la session, donc il n'y a rien à écouter.
 const sAbonner = () => () => {};
 const lireServeur = (): null => null;
 
 /**
- * Décide de la richesse de la scène. Le tier réduit n'est pas un site cassé :
- * c'est une version courte assumée — moins d'actes, pas de portail, pas de
- * matières coûteuses. `null` pendant le rendu serveur.
+ * Décide de la richesse de la scène. Le tier réduit donne une version courte
+ * du parcours : moins d'actes, pas de portail, pas de matières coûteuses.
+ * Renvoie `null` pendant le rendu serveur.
  */
 export function useTier(): Tier | null {
   return useSyncExternalStore(sAbonner, lire, lireServeur);

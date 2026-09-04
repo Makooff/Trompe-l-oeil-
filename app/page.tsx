@@ -16,16 +16,16 @@ const numeroDe = (id: string) =>
 
 const MATIERES = ["Glaçage miroir", "Chocolat tempéré", "Sucre glace", "Marbre"];
 
-/** Gouttière et rythme d'acte : tout vient des tokens, rien en dur. */
+/** Gouttière et rythme d'acte, tirés des tokens. Rien en dur. */
 const acte =
   "px-[var(--gouttiere)] py-[var(--rythme-acte)] max-w-[80rem] mx-auto";
 
 /**
  * Emplacement d'un acte 3D.
  *
- * Par défaut il ne peint rien : c'est une fenêtre, le canvas persistant passe
- * au travers. `plein` garde un aplat là où la scène n'est pas encore posée,
- * pour ne pas laisser un trou dans la page.
+ * Par défaut il ne peint rien et laisse passer le canvas persistant. `plein`
+ * garde un aplat là où la scène n'arrive pas encore, pour éviter un trou dans
+ * la page.
  */
 function Socle({ ratio, plein = false }: { ratio: string; plein?: boolean }) {
   return (
@@ -39,8 +39,8 @@ function Socle({ ratio, plein = false }: { ratio: string; plein?: boolean }) {
 export default function Page() {
   return (
     <main className="relative z-10">
-      {/* 00 — Seuil. Plein jour, plat comme une affiche.
-          Une seule dominante : le nom. Pas de cadre — le blanc porte l'affiche. */}
+      {/* 00. Seuil, en plein jour, plat comme une affiche. Une seule
+          dominante, le nom. Le blanc le porte, aucun cadre n'est nécessaire. */}
       <section
         id="seuil"
         aria-labelledby="seuil-titre"
@@ -56,7 +56,7 @@ export default function Page() {
 
         <div className="py-16">
           <h1 id="seuil-titre" className="sr-only">
-            {maison.nom} — pâtisserie trompe-l&apos;œil
+            {maison.nom}, pâtisserie trompe-l&apos;œil
           </h1>
           <Marque as="div" />
           <Filet className="mt-12 mb-8 max-w-[36rem]" />
@@ -71,13 +71,13 @@ export default function Page() {
         </div>
       </section>
 
-      {/* 01 — La Vitrine. La lumière tombe, l'échelle ment. */}
+      {/* 01. La Vitrine, où la lumière tombe et la taille trompe. */}
       <section id="vitrine" aria-labelledby="vitrine-titre" className={acte}>
         <ActeHeading acte={acteParId.vitrine} />
         <Socle ratio="aspect-16/9" />
       </section>
 
-      {/* 02 — Le Mensonge. Trois pièces, trois coupes. */}
+      {/* 02. Le Mensonge, trois pièces ouvertes sur leur coupe. */}
       <section id="mensonge" aria-labelledby="mensonge-titre" className={acte}>
         <ActeHeading acte={acteParId.mensonge} />
         <div className="grid gap-6 md:grid-cols-3">
@@ -89,7 +89,7 @@ export default function Page() {
         </div>
       </section>
 
-      {/* 03 — L'Anamorphose. Un seul angle. */}
+      {/* 03. L'Anamorphose, lisible depuis un seul angle. */}
       <section
         id="anamorphose"
         aria-labelledby="anamorphose-titre"
@@ -99,7 +99,7 @@ export default function Page() {
         <Socle ratio="aspect-16/9" />
       </section>
 
-      {/* 04 — Les Matières. */}
+      {/* 04. Les Matières. */}
       <section id="matieres" aria-labelledby="matieres-titre" className={acte}>
         <ActeHeading acte={acteParId.matieres} />
         <ul className="grid gap-6 grid-cols-2 lg:grid-cols-4 list-none p-0 m-0">
@@ -112,7 +112,7 @@ export default function Page() {
         </ul>
       </section>
 
-      {/* 05 — La Carte. Le vrai contenu, en HTML pur. */}
+      {/* 05. La Carte, le contenu réel, en HTML. */}
       <section id="carte" aria-labelledby="carte-titre" className={acte}>
         <ActeHeading acte={acteParId.carte} />
         <ul className="list-none p-0 m-0">
@@ -125,7 +125,7 @@ export default function Page() {
         </p>
       </section>
 
-      {/* 06 — La Maison. */}
+      {/* 06. La Maison. */}
       <section id="maison" aria-labelledby="maison-titre" className={acte}>
         <ActeHeading acte={acteParId.maison} />
         <div className="grid gap-16 lg:grid-cols-2 lg:gap-24">

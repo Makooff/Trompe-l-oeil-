@@ -13,15 +13,15 @@ function jourCourant() {
   return 1 - rampe(scroll.progression, acteParId.seuil.fin, acteParId.vitrine.fin);
 }
 
-const AMBIANT = { jour: 1.05, nuit: 0.1 };
-const DIRECTE = { jour: 2.2, nuit: 3.1 };
+const AMBIANT = { jour: 1.05, nuit: 0.06 };
+const DIRECTE = { jour: 2.2, nuit: 0.45 };
 
 /**
- * Éclairage procédural — aucun HDRI téléchargé. Les spéculaires sont dessinés
- * par des Lightformers, donc contrôlés au lieu d'être subis.
+ * Éclairage procédural, sans aucun HDRI téléchargé. Des Lightformers dessinent
+ * les spéculaires, ce qui nous laisse les placer où nous voulons.
  *
- * Les intensités sont interpolées sur le même curseur que les couleurs CSS :
- * un seul réglage à maintenir, jamais deux setups.
+ * Les intensités s'interpolent sur le curseur qui pilote les couleurs CSS.
+ * Un seul réglage couvre donc le 2D et la 3D.
  */
 export function Lighting() {
   const ambiant = useRef<AmbientLight>(null);
@@ -65,7 +65,7 @@ export function Lighting() {
           scale={[8, 4, 1]}
           color="#fff6e6"
         />
-        {/* Rappel froid côté gauche : creuse les arêtes du glaçage. */}
+        {/* Rappel froid côté gauche, qui creuse les arêtes du glaçage. */}
         <Lightformer
           form="rect"
           intensity={0.5}

@@ -11,7 +11,7 @@ const champ =
 
 /**
  * Formulaire de réservation. Aucun backend n'est branché : la soumission
- * confirme localement et renvoie vers le téléphone de l'atelier.
+ * confirme côté client et renvoie vers le téléphone de l'atelier.
  */
 export function ReserverForm() {
   const [envoye, setEnvoye] = useState(false);

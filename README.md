@@ -1,17 +1,16 @@
 # Maison Leurre
 
-Site vitrine d'une maison de pâtisserie trompe-l'œil fictive. Huit pièces qui
-imitent des objets banals — un citron, un caillou, un savon — et se révèlent
-desserts quand on les ouvre.
+Site vitrine d'une maison de pâtisserie trompe-l'œil fictive. Huit pièces
+copient des objets qu'on ne mange pas, un citron, un caillou ou un savon, et
+montrent leur coupe quand on les ouvre.
 
-Le trompe-l'œil n'est pas un thème décoratif : c'est le mécanisme du site. La
-page ment sur sa propre nature — plate puis profonde, image puis volume, jour
-puis nuit.
+Le site applique le même procédé à lui-même. Il s'ouvre plat comme une affiche
+en plein jour, se creuse en profondeur, puis bascule dans la nuit d'atelier.
 
 ## Stack
 
-Next.js 16 (App Router, TypeScript) · Tailwind CSS v4 · React Three Fiber +
-drei · GSAP ScrollTrigger · Lenis · zustand.
+Next.js 16 (App Router, TypeScript), Tailwind CSS v4, React Three Fiber avec
+drei, Lenis.
 
 ```bash
 npm install
@@ -24,26 +23,34 @@ npm run build
 | Chemin | Rôle |
 |---|---|
 | `app/styles/tokens.css` | Le design system entier. Aucune valeur visuelle ailleurs. |
-| `content/` | Contenu éditorial : la maison, les 8 créations, les 7 actes. |
+| `content/` | La maison, les huit créations, les sept actes. |
 | `components/ui/` | Composants 2D. |
-| `components/scene/` | Scène 3D — un seul canvas persistant. |
-| `lib/scroll/` | Bornes des actes et progression, source de vérité partagée 2D/3D. |
+| `components/scene/` | La scène 3D, sur un canvas unique et persistant. |
+| `lib/scroll/` | Bornes des actes et progression, partagées par le 2D et la 3D. |
 | `public/models/` | Slot GLTF pour remplacer les géométries procédurales. |
 
-## La bascule jour → nuit
+## La bascule jour vers nuit
 
-Une seule variable, `--jour` (1 → 0), écrite au scroll sur `<html>`. Toutes les
-couleurs en dérivent par `color-mix`, et les intensités de lumière 3D sont
-interpolées sur la même valeur. Un curseur, jamais deux thèmes.
+Le scroll écrit une seule variable, `--jour`, qui descend de 1 à 0 sur
+`<html>`. Les couleurs en dérivent par `color-mix` et les intensités de lumière
+3D s'interpolent sur la même valeur. Vous réglez un curseur au lieu de
+maintenir deux thèmes.
 
 ## Les actes
 
 `content/actes.ts` déclare les sept actes et leurs bornes de scroll. Le 2D et la
-scène 3D lisent les mêmes bornes — modifier une plage les déplace des deux côtés.
+scène 3D lisent les mêmes bornes, donc déplacer une plage les déplace des deux
+côtés.
+
+## La progression du scroll
+
+`lib/scroll/scrollStore.ts` garde la progression dans un objet mutable de
+module. La scène la lit dans `useFrame` soixante fois par seconde, et un
+setState par frame rerendrait tout l'arbre React.
 
 ## Accessibilité
 
-Le canvas est décoratif (`aria-hidden`). La carte, les cartels et l'adresse
-existent en HTML rendu côté serveur : sans JavaScript et sans WebGL, tout le
-contenu reste lisible. `prefers-reduced-motion` désactive le scroll piloté sans
-retirer une seule ligne de contenu.
+Le canvas porte `aria-hidden`. La carte, les cartels et l'adresse existent en
+HTML rendu côté serveur : sans JavaScript ni WebGL, vous gardez le contenu.
+`prefers-reduced-motion` coupe le scroll lissé et le rail caméra sans retirer
+une ligne de texte.

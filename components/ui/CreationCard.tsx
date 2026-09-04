@@ -2,11 +2,10 @@ import { Cartel } from "./Cartel";
 import type { Creation } from "@/content/creations";
 
 /**
- * Pièce exposée : socle, cartel, et une ombre portée dont l'angle ne
- * correspond pas à la géométrie. Au survol, elle se corrige.
+ * Pièce exposée : un socle, un cartel, et une ombre portée dont l'angle
+ * contredit la géométrie. Elle se corrige au survol.
  *
- * Le socle est un aplat, sans libellé : le vide assumé vaut mieux qu'une
- * étiquette de maquette. La phase 3D vient l'occuper.
+ * Le socle reste un aplat sans libellé. La scène 3D viendra l'occuper.
  */
 export function CreationCard({
   creation,

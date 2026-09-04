@@ -2,10 +2,10 @@ export const maison = {
   nom: "Maison Leurre",
   signature: "Ne croyez pas vos yeux.",
   chapo:
-    "Huit pièces qui prétendent être autre chose. Un citron qui n'est pas un citron, un caillou qui se mange, un savon qu'on découpe à la fourchette. La ressemblance n'est pas un tour de main : c'est le sujet.",
+    "Huit pièces sculptées d'après des objets qu'on ne mange pas. Vous prenez le citron pour un citron jusqu'à ce que la lame entre dedans. Nous passons autant de temps sur la ressemblance que sur le goût.",
   adresse: "9 rue des Feuillantines",
   ville: "75005 Paris",
-  horaires: "Mercredi — dimanche, 11h — 19h",
+  horaires: "Mercredi au dimanche, 11h à 19h",
   // Numéro de la plage réservée à la fiction en France.
   telephone: "01 99 00 41 12",
   email: "atelier@maisonleurre.fr",

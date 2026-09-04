@@ -1,11 +1,11 @@
 import type { Creation } from "@/content/creations";
 
 /**
- * Ligne de carte imprimée : le faux titre, la vérité, le prix.
- * Volontairement non cliquable — une carte ne se navigue pas, elle se lit.
+ * Ligne de carte imprimée : le faux titre, la composition, le prix. Rien n'est
+ * cliquable, parce qu'on lit une carte au lieu de la naviguer.
  *
- * Le nom tient un cran sous le display des titres d'acte : huit noms au même
- * poids que le titre de section feraient huit dominantes et aucune.
+ * Le nom tient un cran sous le display des titres d'acte. Au même poids, huit
+ * noms se disputeraient l'attention avec le titre de section.
  */
 export function CarteRow({ creation }: { creation: Creation }) {
   return (

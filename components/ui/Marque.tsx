@@ -1,6 +1,6 @@
 import { maison } from "@/content/maison";
 
-/** Le wordmark. Bodoni, tracking serré, jamais en gras appuyé. */
+/** Le wordmark, en Bodoni, tracking serré et graisse moyenne. */
 export function Marque({
   as: Tag = "span",
   className = "",

@@ -1,7 +1,7 @@
 import { Filet } from "./Filet";
 import type { Acte } from "@/content/actes";
 
-/** En-tête d'acte : numéro muséal, kicker, titre, chapô. */
+/** En-tête d'acte : numéro d'inventaire, kicker, titre et chapô. */
 export function ActeHeading({ acte }: { acte: Acte }) {
   return (
     <header className="mb-12 md:mb-16">

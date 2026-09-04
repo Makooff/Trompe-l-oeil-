@@ -6,7 +6,7 @@ import { MathUtils, Vector3 } from "three";
 import { railCible, railPosition } from "@/lib/three/rail";
 import { scroll } from "@/lib/scroll/scrollStore";
 
-/** Plus la valeur est haute, plus la caméra colle au scroll. */
+/** Plus la valeur monte, plus la caméra colle au scroll. */
 const RAIDEUR = 5.5;
 
 export function CameraRig() {
@@ -21,8 +21,8 @@ export function CameraRig() {
     railPosition.getPointAt(p, voulu.current);
     railCible.getPointAt(p, vouluCible.current);
 
-    // Amorti par axe : absorbe le scroll saccadé sans introduire de retard
-    // perceptible sur un scroll continu.
+    // Amorti par axe. Il absorbe le scroll saccadé sans ajouter de retard
+    // visible sur un scroll continu.
     camera.position.set(
       MathUtils.damp(camera.position.x, voulu.current.x, RAIDEUR, delta),
       MathUtils.damp(camera.position.y, voulu.current.y, RAIDEUR, delta),

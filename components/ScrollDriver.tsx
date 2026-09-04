@@ -13,13 +13,12 @@ const EPSILON = 0.001;
 /**
  * Pilote unique du scroll.
  *
- * Publie la progression du document dans le store de module — que la scène 3D
- * lit dans `useFrame` — et écrit `--jour` sur <html>, dont dérive toute la
- * palette. Un seul curseur pour le 2D et la 3D.
+ * Publie la progression du document dans le store de module, que la scène 3D
+ * lit dans `useFrame`, et écrit `--jour` sur <html>, d'où dérive la palette.
+ * Le 2D et la 3D partagent donc le même curseur.
  *
- * Sous `prefers-reduced-motion`, Lenis n'est pas monté : le scroll natif
- * alimente exactement les mêmes valeurs. Rien du contenu ne dépend du scroll
- * lissé, seulement son confort.
+ * Sous `prefers-reduced-motion`, on ne monte pas Lenis et le scroll natif
+ * alimente les mêmes valeurs. Le lissage change le confort, pas le contenu.
  */
 export function ScrollDriver() {
   const mouvementReduit = useReducedMotion();
@@ -29,9 +28,11 @@ export function ScrollDriver() {
     // Le jour tient pendant le Seuil, puis tombe sur toute la Vitrine.
     const debutNuit = acteParId.seuil.fin;
     const finNuit = acteParId.vitrine.fin;
+    const sortieScene = acteParId.matieres.fin;
 
     let precedente = -1;
     let jourEcrit = -1;
+    let opaciteEcrite = -1;
     let dernierTemps = performance.now();
     let rafId = 0;
 
@@ -50,6 +51,14 @@ export function ScrollDriver() {
       if (Math.abs(jour - jourEcrit) > EPSILON) {
         jourEcrit = jour;
         root.style.setProperty("--jour", jour.toFixed(4));
+      }
+
+      // La Carte et La Maison sont des pages de texte. La scène se retire
+      // derrière elles au lieu de délaver le fond.
+      const opacite = 1 - rampe(p, sortieScene, sortieScene + 0.05);
+      if (Math.abs(opacite - opaciteEcrite) > EPSILON) {
+        opaciteEcrite = opacite;
+        root.style.setProperty("--scene-opacite", opacite.toFixed(4));
       }
     };
 

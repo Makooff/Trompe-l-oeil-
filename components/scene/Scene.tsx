@@ -8,12 +8,12 @@ import { Salle } from "./Salle";
 import { ActeSeuil } from "./acts/ActeSeuil";
 
 /**
- * Le canvas unique et persistant du site. Il n'est jamais démonté entre les
- * actes : chaque acte se contente de se rendre invisible hors de sa plage, ce
- * qui évite une recompilation de shader en plein scroll.
+ * Le canvas unique et persistant du site. Aucun acte ne le démonte : chacun se
+ * rend invisible hors de sa plage, ce qui évite de recompiler les shaders en
+ * plein scroll.
  *
- * Fond transparent : la couleur du site reste celle du CSS, pilotée par
- * `--jour`. La scène compose par-dessus au lieu de la doubler.
+ * Le fond reste transparent. Le CSS garde la main sur la couleur du site via
+ * `--jour`, et la scène compose par-dessus.
  */
 export default function Scene() {
   return (

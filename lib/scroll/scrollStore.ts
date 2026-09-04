@@ -1,19 +1,17 @@
 /**
  * Source de vérité de la progression du scroll.
  *
- * Volontairement un objet mutable de module, pas un store React : la scène 3D
- * le lit dans `useFrame`, soixante fois par seconde. Passer par un setState
- * rerendrait l'arbre à chaque frame — c'est la première cause de saccade sur
- * ce type de site.
+ * Un objet mutable de module plutôt qu'un store React : la scène 3D le lit
+ * dans `useFrame`, soixante fois par seconde, et un setState par frame
+ * rerendrait tout l'arbre. Les saccades viennent presque toujours de là.
  *
- * Les composants React qui ont besoin d'une valeur ponctuelle s'abonnent via
- * `sAbonner`, appelé au plus une fois par frame et seulement si la valeur a
- * bougé.
+ * Les composants React qui veulent une valeur ponctuelle s'abonnent via
+ * `sAbonner`, appelé au plus une fois par frame.
  */
 export type EtatScroll = {
   /** Progression du document, 0 → 1. */
   progression: number;
-  /** Vitesse instantanée, en fraction de document par seconde. Signe = sens. */
+  /** Vitesse instantanée, en fraction de document par seconde. Le signe donne le sens. */
   vitesse: number;
 };
 
