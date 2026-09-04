@@ -46,13 +46,16 @@ export default function Page() {
         aria-labelledby="seuil-titre"
         className="min-h-svh flex flex-col justify-between px-[var(--gouttiere)] py-[var(--gouttiere)] max-w-[80rem] mx-auto"
       >
-        <p className="t-cartel text-fg-38 m-0">
-          {maison.ville}
-          <span className="mx-2 text-trait-fort" aria-hidden="true">
-            ·
-          </span>
-          depuis {maison.fondation}
-        </p>
+        <div className="flex items-center justify-between gap-6">
+          <Marque variante="horizontal" />
+          <p className="t-cartel text-fg-38 m-0">
+            {maison.ville}
+            <span className="mx-2 text-trait-fort" aria-hidden="true">
+              ·
+            </span>
+            depuis {maison.fondation}
+          </p>
+        </div>
 
         <div className="py-16">
           <h1 id="seuil-titre" className="sr-only">
@@ -161,13 +164,10 @@ export default function Page() {
 
       <footer className="px-[var(--gouttiere)] pb-16 max-w-[80rem] mx-auto">
         <Filet className="mb-6" />
-        <p className="t-cartel text-fg-38 m-0">
-          {maison.nom}
-          <span className="mx-2 text-trait-fort" aria-hidden="true">
-            ·
-          </span>
-          {maison.signature}
-        </p>
+        <div className="flex flex-wrap items-center justify-between gap-6">
+          <Marque variante="horizontal" />
+          <p className="t-cartel text-fg-38 m-0">{maison.devise}</p>
+        </div>
       </footer>
     </main>
   );

@@ -1,6 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
+import { usePathname } from "next/navigation";
 import { useTier } from "@/lib/perf/useTier";
 
 // `ssr: false` n'est autorisé que dans un composant client. La scène ne doit
@@ -13,10 +14,13 @@ const Scene = dynamic(() => import("./Scene"), { ssr: false });
  */
 export function SceneHost() {
   const tier = useTier();
+  const chemin = usePathname();
 
   // Tier pas encore décidé au premier rendu : on ne monte rien plutôt qu'une
   // scène à remplacer dans la foulée.
   if (tier === null) return null;
+  // La scène appartient à l'accueil. Une 404 reste une page de texte.
+  if (chemin !== "/") return null;
 
   return (
     <div

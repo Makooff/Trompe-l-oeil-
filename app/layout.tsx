@@ -24,22 +24,30 @@ const geistMono = Geist_Mono({
   display: "swap",
 });
 
+const ORIGINE = process.env.NEXT_PUBLIC_ORIGINE ?? "https://maisonleurre.be";
+
 export const metadata: Metadata = {
-  title: `${maison.nom}, pâtisserie trompe-l'œil, Paris 5ᵉ`,
+  metadataBase: new URL(ORIGINE),
+  title: {
+    default: `${maison.nom}, pâtisserie trompe-l'œil à Mons`,
+    template: `%s · ${maison.nom}`,
+  },
   description: maison.chapo,
   openGraph: {
     title: maison.nom,
     description: maison.signature,
-    locale: "fr_FR",
+    locale: "fr_BE",
     type: "website",
+    siteName: maison.nom,
   },
+  twitter: { card: "summary_large_image" },
 };
 
 export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="fr">
+    <html lang="fr-BE">
       <body
         className={`${bodoni.variable} ${geistSans.variable} ${geistMono.variable} antialiased`}
       >
