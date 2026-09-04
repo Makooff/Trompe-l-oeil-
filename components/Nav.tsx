@@ -9,7 +9,7 @@ import { nombreArticles, usePanier } from "@/lib/panier";
 const LIENS = [
   { href: "/patisseries", label: "Pâtisseries" },
   { href: "/patisseries?collection=fruit", label: "Les fruits" },
-  { href: "/patisseries?collection=objet", label: "Les objets" },
+  { href: "/patisseries?collection=coque", label: "Les fruits à coque" },
   { href: "/la-maison", label: "La maison" },
 ];
 

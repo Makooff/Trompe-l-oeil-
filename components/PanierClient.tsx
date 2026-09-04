@@ -66,7 +66,7 @@ export function PanierClient() {
             return (
               <li key={l.id} className="grid grid-cols-[5rem_1fr_auto] gap-5 items-center py-5 border-b border-filet">
                 <Link href={`/patisseries/${c.id}`} className="block aspect-4/5 bg-fond-doux">
-                  <img src={`/pieces/${c.id}/ferme-512.webp`} alt="" className="h-full w-full object-contain p-2" />
+                  <img src={`/pieces/${c.id}/ferme-512.webp`} alt="" className="h-full w-full object-cover" />
                 </Link>
                 <div>
                   <Link href={`/patisseries/${c.id}`} className="t-etiquette-l lien">

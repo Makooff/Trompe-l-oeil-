@@ -59,7 +59,7 @@ export default function Page() {
                 alt=""
                 loading="lazy"
                 decoding="async"
-                className="h-full w-full object-contain p-[10%]"
+                className="h-full w-full object-cover"
               />
             </div>
           ))}

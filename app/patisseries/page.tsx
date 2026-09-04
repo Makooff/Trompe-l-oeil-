@@ -8,15 +8,15 @@ export const metadata: Metadata = { title: "Pâtisseries" };
 const FILTRES: { valeur: Categorie | "toutes"; label: string }[] = [
   { valeur: "toutes", label: "Toutes" },
   { valeur: "fruit", label: "Les fruits" },
-  { valeur: "objet", label: "Les objets" },
+  { valeur: "coque", label: "Les fruits à coque" },
 ];
 
 export default async function Page({ searchParams }: { searchParams: Promise<{ collection?: string }> }) {
   const { collection } = await searchParams;
-  const filtre: Categorie | "toutes" = collection === "fruit" || collection === "objet" ? collection : "toutes";
+  const filtre: Categorie | "toutes" = collection === "fruit" || collection === "coque" ? collection : "toutes";
   const liste = filtre === "toutes" ? creations : creations.filter((c) => c.categorie === filtre);
   const titre = filtre === "toutes" ? "Toutes les pièces" : collections[filtre].nom;
-  const sousTitre = filtre === "toutes" ? "Huit pièces, quatre fruits et quatre objets. Toutes se coupent, toutes se mangent." : collections[filtre].sousTitre;
+  const sousTitre = filtre === "toutes" ? "Huit pièces, six fruits et deux fruits à coque. Toutes se coupent, toutes se mangent." : collections[filtre].sousTitre;
 
   return (
     <div className="pt-[calc(var(--barre)+3rem)] px-[var(--gouttiere)]">

@@ -6,6 +6,7 @@ import { GrilleProduits } from "@/components/GrilleProduits";
 import { Lame } from "@/components/ui/Lame";
 import { collections, creationParId, creations } from "@/content/creations";
 import { maison } from "@/content/maison";
+import { PIECES_AVEC_COUPE, srcSetPiece } from "@/lib/pieces";
 
 type Props = { params: Promise<{ id: string }> };
 
@@ -35,8 +36,24 @@ export default async function Page({ params }: Props) {
     <div className="pt-[calc(var(--barre)+2rem)]">
       <div className="px-[var(--gouttiere)] grid gap-10 lg:grid-cols-[1.2fr_1fr] lg:gap-16">
         <div>
-          <Lame id={c.id} faux={c.nom} className="aspect-4/5" />
-          <p className="t-etiquette text-gris-clair mt-3 mb-0">Glissez la lame pour ouvrir la pièce.</p>
+          {PIECES_AVEC_COUPE.has(c.id) ? (
+            <>
+              <Lame id={c.id} faux={c.nom} className="aspect-4/5" />
+              <p className="t-etiquette text-gris-clair mt-3 mb-0">Glissez la lame pour ouvrir la pièce.</p>
+            </>
+          ) : (
+            <div className="aspect-[482/666] bg-fond-doux overflow-hidden">
+              <img
+                src={`/pieces/${c.id}/ferme-1024.webp`}
+                srcSet={srcSetPiece(c.id, "ferme", "webp")}
+                sizes="(min-width: 64rem) 55vw, 100vw"
+                alt={c.nom}
+                fetchPriority="high"
+                decoding="async"
+                className="h-full w-full object-cover"
+              />
+            </div>
+          )}
         </div>
 
         <div className="lg:pt-6 lg:max-w-[28rem]">

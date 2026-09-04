@@ -5,11 +5,11 @@ import { Bouton } from "@/components/ui/Bouton";
 import { Lame } from "@/components/ui/Lame";
 import { collections, creations } from "@/content/creations";
 import { maison } from "@/content/maison";
-import { srcSetPiece } from "@/lib/pieces";
+import { PIECES_AVEC_COUPE, srcSetPiece } from "@/lib/pieces";
 
 const section = "px-[var(--gouttiere)] mt-[var(--section)]";
 
-function TuileCollection({ categorie }: { categorie: "fruit" | "objet" }) {
+function TuileCollection({ categorie }: { categorie: "fruit" | "coque" }) {
   const c = collections[categorie];
   const vedette = creations.find((x) => x.categorie === categorie)!;
   return (
@@ -22,7 +22,7 @@ function TuileCollection({ categorie }: { categorie: "fruit" | "objet" }) {
           alt=""
           loading="lazy"
           decoding="async"
-          className="absolute inset-0 h-full w-full object-contain p-[12%] transition-transform duration-[var(--d-3)] ease-[var(--ease)] group-hover:scale-[1.03]"
+          className="absolute inset-0 h-full w-full object-cover transition-transform duration-[var(--d-3)] ease-[var(--ease)] group-hover:scale-[1.03]"
         />
       </div>
       <div className="pt-4">
@@ -50,20 +50,34 @@ export default function Page() {
         <h2 id="collections" className="sr-only">Collections</h2>
         <div className="grid gap-8 md:grid-cols-2 md:gap-3">
           <TuileCollection categorie="fruit" />
-          <TuileCollection categorie="objet" />
+          <TuileCollection categorie="coque" />
         </div>
       </section>
 
       <section className={section} aria-labelledby="trompe">
         <div className="grid gap-10 lg:grid-cols-2 lg:gap-16 items-center">
           <div className="lg:order-2">
-            <Lame id="cerise" faux="Cerise" className="aspect-4/5" />
+            {PIECES_AVEC_COUPE.has("poire") ? (
+              <Lame id="poire" faux="Framboise" className="aspect-4/5" />
+            ) : (
+              <div className="aspect-[482/666] bg-fond-doux overflow-hidden">
+                <img
+                  src="/pieces/poire/ferme-1024.webp"
+                  srcSet={srcSetPiece("poire", "ferme", "webp")}
+                  sizes="(min-width: 64rem) 50vw, 100vw"
+                  alt="Framboise, une pièce ouverte"
+                  loading="lazy"
+                  decoding="async"
+                  className="h-full w-full object-cover"
+                />
+              </div>
+            )}
           </div>
           <div className="lg:order-1 max-w-[30rem]">
             <p className="t-etiquette text-gris m-0">Le trompe-l&apos;œil</p>
             <h2 id="trompe" className="t-grand mt-4">Coupez, c&apos;est un dessert.</h2>
             <p className="text-gris mt-6 mb-8">{maison.presentation}</p>
-            <p className="t-etiquette text-gris-clair m-0">Glissez la lame sur la cerise.</p>
+            <p className="t-etiquette text-gris-clair m-0">Chaque pièce se coupe à la fourchette.</p>
           </div>
         </div>
       </section>
