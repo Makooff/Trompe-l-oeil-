@@ -17,7 +17,7 @@ export function CarteProduit({
 }) {
   return (
     <Link href={`/patisseries/${creation.id}`} className="group block">
-      <div className="relative aspect-4/5 bg-fond-doux overflow-hidden">
+      <div className="relative aspect-square bg-fond-doux overflow-hidden">
         <picture>
           <source type="image/avif" srcSet={srcSetPiece(creation.id, "ferme", "avif")} sizes={sizes} />
           <img
@@ -28,7 +28,7 @@ export function CarteProduit({
             loading={priorite ? "eager" : "lazy"}
             fetchPriority={priorite ? "high" : "auto"}
             decoding="async"
-            className="absolute inset-0 h-full w-full object-contain p-[8%] transition-opacity duration-[var(--d-3)] ease-[var(--ease)] group-hover:opacity-0 group-focus-visible:opacity-0"
+            className="absolute inset-0 h-full w-full object-cover transition-opacity duration-[var(--d-3)] ease-[var(--ease)] group-hover:opacity-0 group-focus-visible:opacity-0"
           />
         </picture>
         <picture>
@@ -40,7 +40,7 @@ export function CarteProduit({
             alt=""
             loading="lazy"
             decoding="async"
-            className="absolute inset-0 h-full w-full object-contain p-[8%] opacity-0 transition-opacity duration-[var(--d-3)] ease-[var(--ease)] group-hover:opacity-100 group-focus-visible:opacity-100"
+            className="absolute inset-0 h-full w-full object-cover opacity-0 transition-opacity duration-[var(--d-3)] ease-[var(--ease)] group-hover:opacity-100 group-focus-visible:opacity-100"
           />
         </picture>
       </div>

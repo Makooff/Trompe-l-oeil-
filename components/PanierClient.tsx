@@ -5,7 +5,7 @@ import { useState } from "react";
 import { Bouton } from "./ui/Bouton";
 import { creationParId } from "@/content/creations";
 import { maison } from "@/content/maison";
-import { nombreArticles, panier, usePanier } from "@/lib/panier";
+import { nombreArticles, panier, usePanier, useRetrait } from "@/lib/panier";
 
 const champ =
   "w-full h-12 px-0 bg-transparent border-0 border-b border-filet text-fg placeholder:text-gris-clair " +
@@ -22,6 +22,7 @@ function retraitMinimum() {
 
 export function PanierClient() {
   const lignes = usePanier();
+  const jour = useRetrait();
   const [etat, setEtat] = useState<"repos" | "envoi" | "ok" | "erreur">("repos");
   const [recap, setRecap] = useState("");
 
@@ -147,7 +148,7 @@ export function PanierClient() {
         </div>
         <div className="grid gap-2">
           <label htmlFor="retrait" className="t-etiquette text-gris">Jour et heure de retrait</label>
-          <input id="retrait" name="retrait" type="datetime-local" required min={retraitMinimum()} defaultValue={retraitMinimum()} className={champ} />
+          <input id="retrait" name="retrait" type="datetime-local" required min={retraitMinimum()} defaultValue={jour ? `${jour}T10:00` : retraitMinimum()} className={champ} />
         </div>
         <div className="grid gap-2">
           <label htmlFor="note" className="t-etiquette text-gris">Un mot pour l&apos;atelier (facultatif)</label>

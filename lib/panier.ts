@@ -74,3 +74,45 @@ export const panier = {
 };
 
 export const nombreArticles = (l: Ligne[]) => l.reduce((n, x) => n + x.quantite, 0);
+
+/* Le jour de retrait, choisi sur l'accueil ou dans le panier. */
+
+const CLE_RETRAIT = "leurre.retrait";
+const abonnesRetrait = new Set<() => void>();
+let jour = "";
+let jourCharge = false;
+
+function lireRetrait(): string {
+  if (!jourCharge && typeof window !== "undefined") {
+    jourCharge = true;
+    try {
+      jour = window.localStorage.getItem(CLE_RETRAIT) ?? "";
+    } catch {
+      jour = "";
+    }
+  }
+  return jour;
+}
+
+export function useRetrait() {
+  return useSyncExternalStore(
+    (fn) => {
+      abonnesRetrait.add(fn);
+      return () => abonnesRetrait.delete(fn);
+    },
+    lireRetrait,
+    () => "",
+  );
+}
+
+export const retrait = {
+  fixer(iso: string) {
+    jour = iso;
+    try {
+      window.localStorage.setItem(CLE_RETRAIT, iso);
+    } catch {
+      // Stockage indisponible : la date vit le temps de la page.
+    }
+    for (const fn of abonnesRetrait) fn();
+  },
+};

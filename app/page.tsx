@@ -38,20 +38,20 @@ export default function Page() {
     <>
       <Hero />
 
+      <section className="px-[var(--gouttiere)] mt-16 lg:mt-20" aria-labelledby="pieces">
+        <h2 id="pieces" className="sr-only">Les pièces</h2>
+        <GrilleProduits creations={creations} prioriser={4} />
+        <p className="mt-8 mb-0">
+          <Link href="/patisseries" className="t-etiquette lien">Toutes les pièces</Link>
+        </p>
+      </section>
+
       <section className={section} aria-labelledby="collections">
         <h2 id="collections" className="sr-only">Collections</h2>
-        <div className="grid gap-8 md:grid-cols-2 md:gap-6">
+        <div className="grid gap-8 md:grid-cols-2 md:gap-3">
           <TuileCollection categorie="fruit" />
           <TuileCollection categorie="objet" />
         </div>
-      </section>
-
-      <section className={section} aria-labelledby="pieces">
-        <div className="flex items-end justify-between gap-6 mb-8">
-          <h2 id="pieces" className="t-moyen">Les pièces</h2>
-          <Link href="/patisseries" className="t-etiquette lien">Tout voir</Link>
-        </div>
-        <GrilleProduits creations={creations} />
       </section>
 
       <section className={section} aria-labelledby="trompe">

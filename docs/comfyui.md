@@ -130,12 +130,24 @@ Le même préfixe pour les huit pièces, en anglais. Copiez-le tel quel, insére
 description de la pièce à la place de `{description}`.
 
 ```
-studio product photograph of a trompe-l'oeil pastry, {description},
-ultra realistic, resting on a matte warm-grey plaster plinth,
-near-black warm background, warm key light from top-left at 45 degrees,
-faint cool fill from the left, no rim light, 85mm lens, f/8, sharp focus,
-fine film grain, centered, one third headroom, no text, no props
+overhead food photograph, top-down, several trompe-l'oeil pastries shaped like
+{description}, arranged loosely on a white crackle-glazed ceramic surface,
+soft natural daylight from a window, gentle shadows, ultra realistic, velvet
+and sugar textures, 50mm lens, sharp focus, no hands, no text, no props
 ```
+
+C'est le style de la référence : vue de dessus, plusieurs pièces, une lumière
+de fenêtre, de la céramique blanche craquelée. Pour la fiche et la lame, une
+seconde image de la même scène avec une pièce coupée au premier plan :
+
+```
+same scene, same ceramic surface and daylight, one of the pastries cut in half
+in the foreground showing its cross-section: {couches}, the others intact
+```
+
+Pour le détourage du hero (le citron qui s'ouvre) et de la lame, gardez aussi
+une version d'une pièce seule sur fond blanc uni, générée avec le prompt
+précédent et « single pastry, centered, pure white seamless background ».
 
 Klein ignore le prompt négatif. Pour FLUX.1 dev, utilisez :
 
