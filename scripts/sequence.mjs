@@ -9,6 +9,7 @@
  *
  *   node scripts/sequence.mjs citron
  *   node scripts/sequence.mjs citron --fps 20 --hauteur 1080
+ *   node scripts/sequence.mjs citron --nom orbite      # lit rendus/citron/orbite.mp4
  *
  * Demande ffmpeg sur la machine. Une centaine d'images WebP à 1080 px pèse
  * autour de 4 Mo ; le composant les charge par ordre d'importance, la
@@ -30,9 +31,11 @@ const lire = (nom, defaut) => {
 };
 const fps = lire("fps", 20);
 const hauteur = lire("hauteur", 1080);
+const iNom = options.indexOf("--nom");
+const nom = iNom >= 0 ? options[iNom + 1] : "coupe";
 
-const source = join("rendus", id, "coupe.mp4");
-const cible = join("public", "sequences", id);
+const source = join("rendus", id, `${nom}.mp4`);
+const cible = join("public", "sequences", id, nom === "coupe" ? "" : nom);
 
 try {
   await stat(source);
@@ -57,18 +60,18 @@ execFileSync("ffmpeg", [
 const pngs = (await readdir(tampon)).filter((f) => f.endsWith(".png")).sort();
 let largeur = 0;
 let haut = 0;
-for (const [i, nom] of pngs.entries()) {
-  const meta = await sharp(join(tampon, nom)).metadata();
+for (const [i, fichier] of pngs.entries()) {
+  const meta = await sharp(join(tampon, fichier)).metadata();
   largeur = meta.width ?? largeur;
   haut = meta.height ?? haut;
-  await sharp(join(tampon, nom))
+  await sharp(join(tampon, fichier))
     .webp({ quality: 80, effort: 5 })
-    .toFile(join(cible, `coupe-${String(i).padStart(3, "0")}.webp`));
+    .toFile(join(cible, `${nom}-${String(i).padStart(3, "0")}.webp`));
 }
 await rm(tampon, { recursive: true, force: true });
 
 await writeFile(
   join(cible, "manifeste.json"),
-  JSON.stringify({ images: pngs.length, largeur, hauteur: haut, fps, motif: "coupe-%03d.webp" }, null, 2),
+  JSON.stringify({ images: pngs.length, largeur, hauteur: haut, fps, motif: `${nom}-%03d.webp` }, null, 2),
 );
 console.log(`${id} : ${pngs.length} images, ${largeur} × ${haut}, ${fps} i/s`);

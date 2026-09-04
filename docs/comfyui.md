@@ -360,3 +360,59 @@ composant charge la première et la dernière d'abord, puis les milieux, et
 dessine dès trois images. En attendant votre vidéo, `node
 scripts/garde-sequence.mjs` fabrique une séquence de garde depuis les images
 de garde.
+
+## 10. Depuis vos propres photos
+
+Une photo réelle vaut mieux que n'importe quel prompt. Le pipeline par pièce :
+
+1. **Détourage** de la photo avec BiRefNet, fond transparent. Si la photo est
+   prise sous un angle bas, gardez-la ; si elle est prise de dessus, tout le
+   reste suit aussi.
+2. **Uniformiser la lumière** : Klein en mode édition, votre photo détourée
+   en référence, prompt `this exact pastry, unchanged shape, colour and
+   surface, placed on a white crackle-glazed ceramic surface, soft natural
+   daylight from a window, gentle shadow`. Une passe par pièce, même seed
+   pour toutes, et les huit pièces se ressemblent enfin comme une série.
+3. **La coupe** : même montage, l'image de l'étape 2 en référence, le prompt
+   de coupe de la section 6 avec vos vraies couches.
+4. **Export** avec `scripts/pieces.mjs`.
+
+Si vous avez une photo de la pièce déjà coupée, servez-vous-en comme
+référence à l'étape 3 au lieu d'un prompt : `the same pastry, cut exactly like
+this reference`.
+
+## 11. Un modèle 3D depuis une photo
+
+Pour la boutique en vrai relief, rotation libre et aperçu en réalité
+augmentée sur iPhone.
+
+| Outil | Où | Sur la 4070 Ti | Résultat |
+|---|---|---|---|
+| Hunyuan3D 2.1 | ComfyUI, nœuds `ComfyUI-Hunyuan3DWrapper` | oui, forme en 1 à 2 min, texture en 3 à 5 min | `.glb` texturé PBR, le meilleur rapport qualité/effort |
+| TRELLIS | ComfyUI, nœuds `ComfyUI-IF_Trellis` | oui, plus lent | `.glb`, formes très propres, textures parfois plates |
+| Tripo, Meshy | en ligne | rien à installer | rapide, payant après quelques essais |
+
+Entrée : la photo détourée de l'étape 10.1, une seule pièce, bien centrée,
+fond transparent. Une vue de trois-quarts donne une meilleure forme qu'une
+vue de face. Sortie : `rendus/<id>/piece.glb`, à déposer dans
+`public/modeles/<id>.glb` ; le site l'affiche avec `<model-viewer>`.
+
+Limites à connaître : les glaçages miroir ressortent cireux, le velours perd
+son grain, et la coupe n'existe pas dans le modèle. Le modèle sert à tourner
+autour de la pièce ; la coupe reste la vidéo.
+
+## 12. La vidéo depuis vos photos
+
+Même chose que la section 9, avec la photo détourée et relightée de l'étape
+10.2 comme première image. Deux vidéos par pièce vedette :
+
+- **La coupe** (section 9), pour le hero.
+- **L'orbite**, pour faire tourner la pièce sur sa fiche :
+
+```
+Static product on a white ceramic surface, camera orbits 360 degrees around
+the pastry at constant height, slow and steady, seamless loop back to the
+starting frame, lighting unchanged, no hands, no text
+```
+
+6 s, 1080p, puis `node scripts/sequence.mjs <id> --nom orbite`.
