@@ -14,4 +14,10 @@ export function srcSetPiece(id: string, variante: VariantePiece, format: "avif" 
 }
 
 /** Pièces qui ont déjà leurs images. Les autres montrent un socle vide. */
-export const PIECES_RENDUES = new Set(["citron"]);
+export const PIECES_RENDUES = new Set(["citron", "noisette", "cerise", "poire", "caillou", "savon", "oeuf", "marbre"]);
+
+/**
+ * Pièces qui ont une vraie image de coupe, distincte de la fermée. Sans elle,
+ * la lame n'a rien à révéler : la fiche montre la photo seule.
+ */
+export const PIECES_AVEC_COUPE = new Set<string>([]);

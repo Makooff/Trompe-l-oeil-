@@ -1,131 +1,110 @@
-import { ActeHeading } from "@/components/ui/ActeHeading";
+import Link from "next/link";
+import { GrilleProduits } from "@/components/GrilleProduits";
+import { Hero } from "@/components/Hero";
 import { Bouton } from "@/components/ui/Bouton";
-import { CarteRow } from "@/components/ui/CarteRow";
-import { Filet } from "@/components/ui/Filet";
-import { Marque } from "@/components/ui/Marque";
-import { RailCollection } from "@/components/ui/RailCollection";
-import { ReserverForm } from "@/components/ui/ReserverForm";
-import { ScrollHint } from "@/components/ui/ScrollHint";
-import { SequenceCoupe } from "@/components/ui/SequenceCoupe";
-import { acteParId } from "@/content/actes";
-import { creations } from "@/content/creations";
+import { Lame } from "@/components/ui/Lame";
+import { collections, creations } from "@/content/creations";
 import { maison } from "@/content/maison";
+import { PIECES_AVEC_COUPE, srcSetPiece } from "@/lib/pieces";
 
+const section = "px-[var(--gouttiere)] mt-[var(--section)]";
 
-/** Gouttière et rythme d'acte, tirés des tokens. Rien en dur. */
-const acte =
-  "px-[var(--gouttiere)] py-[var(--rythme-acte)] max-w-[80rem] mx-auto";
+function TuileCollection({ categorie }: { categorie: "fruit" | "coque" }) {
+  const c = collections[categorie];
+  const vedette = creations.find((x) => x.categorie === categorie)!;
+  return (
+    <Link href={`/patisseries?collection=${categorie}`} className="group block">
+      <div className="relative aspect-4/5 md:aspect-square bg-fond-doux overflow-hidden">
+        <img
+          src={`/pieces/${vedette.id}/ferme-1024.webp`}
+          srcSet={srcSetPiece(vedette.id, "ferme", "webp")}
+          sizes="(min-width: 48rem) 50vw, 100vw"
+          alt=""
+          loading="lazy"
+          decoding="async"
+          className="absolute inset-0 h-full w-full object-cover transition-transform duration-[var(--d-3)] ease-[var(--ease)] group-hover:scale-[1.03]"
+        />
+      </div>
+      <div className="pt-4">
+        <p className="t-petit-titre">{c.nom}</p>
+        <p className="text-gris mt-1 mb-0">{c.sousTitre}</p>
+      </div>
+    </Link>
+  );
+}
 
 export default function Page() {
   return (
-    <main className="relative z-10">
-      {/* 00. Seuil, en plein jour, plat comme une affiche. Une seule
-          dominante, le nom. Le blanc le porte, aucun cadre n'est nécessaire. */}
-      <section
-        id="seuil"
-        aria-labelledby="seuil-titre"
-        className="min-h-svh flex flex-col justify-between px-[var(--gouttiere)] py-[var(--gouttiere)] max-w-[80rem] mx-auto"
-      >
-        <div className="flex items-center justify-between gap-6">
-          <Marque variante="horizontal" />
-          <p className="t-cartel text-fg-38 m-0">
-            {maison.ville}
-            <span className="mx-2 text-trait-fort" aria-hidden="true">
-              ·
-            </span>
-            depuis {maison.fondation}
-          </p>
-        </div>
+    <>
+      <Hero />
 
-        <div className="py-16">
-          <h1 id="seuil-titre" className="sr-only">
-            {maison.nom}, pâtisserie trompe-l&apos;œil
-          </h1>
-          <Marque as="div" />
-          <Filet className="mt-12 mb-8 max-w-[36rem]" />
-          <p className="t-display-m mesure m-0">{maison.signature}</p>
-        </div>
-
-        <div className="flex flex-wrap items-center gap-6 justify-between">
-          <ScrollHint>Descendez, l&apos;affiche va se décoller</ScrollHint>
-          <Bouton variante="primaire" href="#maison">
-            Réserver
-          </Bouton>
-        </div>
-      </section>
-
-      {/* 01. La Vitrine. La lumière tombe et la pièce se coupe derrière le texte. */}
-      <section id="vitrine" aria-labelledby="vitrine-titre" className={acte} data-curseur="lame">
-        <ActeHeading acte={acteParId.vitrine} />
-        {/* La coupe, en séquence d'images pilotée par le scroll. Même
-            composant sur grand écran et sur iPhone. */}
-        <div className="mt-12 lg:mt-4 lg:ml-auto lg:w-[min(52vw,calc(78svh*var(--ratio)))]" style={{ "--ratio": "1.5" } as React.CSSProperties}>
-          <SequenceCoupe id="citron" faux="Citron" />
-        </div>
-      </section>
-
-      {/* 02. Le Mensonge. La collection, une lame sur chaque pièce. */}
-      <section id="mensonge" aria-labelledby="mensonge-titre">
-        <div className={acte}>
-          <ActeHeading acte={acteParId.mensonge} />
-        </div>
-        <RailCollection creations={creations} />
-      </section>
-
-      {/* 03. La Carte, le contenu réel, en HTML. */}
-      <section id="carte" aria-labelledby="carte-titre" className={acte}>
-        <ActeHeading acte={acteParId.carte} />
-        <ul className="list-none p-0 m-0">
-          {creations.map((c) => (
-            <CarteRow key={c.id} creation={c} />
-          ))}
-        </ul>
-        <p className="t-cartel text-fg-38 mt-8 mb-0">
-          Allergènes détaillés sur demande à l&apos;atelier.
+      <section className="px-[var(--gouttiere)] mt-16 lg:mt-20" aria-labelledby="pieces">
+        <h2 id="pieces" className="sr-only">Les pièces</h2>
+        <GrilleProduits creations={creations} prioriser={4} />
+        <p className="mt-8 mb-0">
+          <Link href="/patisseries" className="t-etiquette lien">Toutes les pièces</Link>
         </p>
       </section>
 
-      {/* 04. La Maison. */}
-      <section id="maison" aria-labelledby="maison-titre" className={acte}>
-        <ActeHeading acte={acteParId.maison} />
-        <div className="grid gap-16 lg:grid-cols-2 lg:gap-24">
-          <div>
-            <p className="text-fg-70 mesure mt-0 mb-12">{maison.chapo}</p>
-            <address className="not-italic">
-              <p className="t-display-m m-0">{maison.adresse}</p>
-              <p className="t-display-m mt-1 mb-8">{maison.ville}</p>
-              <Filet className="mb-6" />
-              <p className="t-cartel text-fg-70 m-0">{maison.horaires}</p>
-              <p className="t-cartel text-fg-70 mt-3 mb-0">
-                <a
-                  href={`tel:${maison.telephone.replace(/\s/g, "")}`}
-                  className="hover:text-or transition-colors duration-[var(--d-2)] ease-[var(--ease)]"
-                >
-                  {maison.telephone}
-                </a>
-                <span className="mx-2 text-trait-fort" aria-hidden="true">
-                  ·
-                </span>
-                <a
-                  href={`mailto:${maison.email}`}
-                  className="hover:text-or transition-colors duration-[var(--d-2)] ease-[var(--ease)]"
-                >
-                  {maison.email}
-                </a>
-              </p>
-            </address>
-          </div>
-          <ReserverForm />
+      <section className={section} aria-labelledby="collections">
+        <h2 id="collections" className="sr-only">Collections</h2>
+        <div className="grid gap-8 md:grid-cols-2 md:gap-3">
+          <TuileCollection categorie="fruit" />
+          <TuileCollection categorie="coque" />
         </div>
       </section>
 
-      <footer className="px-[var(--gouttiere)] pb-16 max-w-[80rem] mx-auto">
-        <Filet className="mb-6" />
-        <div className="flex flex-wrap items-center justify-between gap-6">
-          <Marque variante="horizontal" />
-          <p className="t-cartel text-fg-38 m-0">{maison.devise}</p>
+      <section className={section} aria-labelledby="trompe">
+        <div className="grid gap-10 lg:grid-cols-2 lg:gap-16 items-center">
+          <div className="lg:order-2">
+            {PIECES_AVEC_COUPE.has("poire") ? (
+              <Lame id="poire" faux="Framboise" className="aspect-4/5" />
+            ) : (
+              <div className="aspect-[482/666] bg-fond-doux overflow-hidden">
+                <img
+                  src="/pieces/poire/ferme-1024.webp"
+                  srcSet={srcSetPiece("poire", "ferme", "webp")}
+                  sizes="(min-width: 64rem) 50vw, 100vw"
+                  alt="Framboise, une pièce ouverte"
+                  loading="lazy"
+                  decoding="async"
+                  className="h-full w-full object-cover"
+                />
+              </div>
+            )}
+          </div>
+          <div className="lg:order-1 max-w-[30rem]">
+            <p className="t-etiquette text-gris m-0">Le trompe-l&apos;œil</p>
+            <h2 id="trompe" className="t-grand mt-4">Coupez, c&apos;est un dessert.</h2>
+            <p className="text-gris mt-6 mb-8">{maison.presentation}</p>
+            <p className="t-etiquette text-gris-clair m-0">Chaque pièce se coupe à la fourchette.</p>
+          </div>
         </div>
-      </footer>
-    </main>
+      </section>
+
+      <section className={section} aria-labelledby="boutique">
+        <div className="border-t border-filet pt-10 grid gap-8 md:grid-cols-3">
+          <div>
+            <p className="t-etiquette text-gris m-0">La boutique</p>
+            <h2 id="boutique" className="t-moyen mt-3">{maison.adresse}, Mons</h2>
+          </div>
+          <div>
+            <p className="t-etiquette text-gris m-0 mb-3">Horaires</p>
+            <ul className="list-none p-0 m-0 grid gap-1">
+              {maison.horaires.map((h) => (
+                <li key={h.jours} className="flex justify-between gap-4 max-w-[20rem]">
+                  <span>{h.jours}</span>
+                  <span className="text-gris">{h.heures}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div className="md:justify-self-end">
+            <p className="text-gris mt-0 mb-5 max-w-[18rem]">{maison.retrait}</p>
+            <Bouton href="/patisseries" variante="contour">Commander</Bouton>
+          </div>
+        </div>
+      </section>
+    </>
   );
 }
