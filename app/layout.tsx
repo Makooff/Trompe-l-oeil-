@@ -31,7 +31,7 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+export default function RootLayout({ children, modale }: LayoutProps<"/">) {
   return (
     <html lang="fr-BE">
       <body className={`${hanken.variable} antialiased`}>
@@ -45,6 +45,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <Nav />
         <main id="contenu">{children}</main>
         <Footer />
+        {modale}
       </body>
     </html>
   );
