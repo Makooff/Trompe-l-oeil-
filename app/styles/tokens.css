@@ -1,0 +1,112 @@
+/* Maison Leurre, design system.
+   Toute valeur visuelle du site sort d'ici. Rien en dur ailleurs. */
+
+/* Le curseur de la bascule jour vers nuit. On l'enregistre en <number> pour
+   pouvoir l'interpoler et s'en servir dans calc(). 1 = plein jour, 0 = nuit. */
+@property --jour {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 1;
+}
+
+:root {
+  /* Couleur */
+  --nuit: calc((1 - var(--jour)) * 100%);
+
+  --c-jour-bg: #f2ede4;
+  --c-nuit-bg: #0b0a09;
+  --c-jour-bg-eleve: #e8e1d5;
+  --c-nuit-bg-eleve: #171412;
+  --c-jour-fg: #16130f;
+  --c-nuit-fg: #f2ede4;
+  --c-jour-or: #8a5a1e;
+  --c-nuit-or: #c98b3e;
+  --c-jour-laque: #6e1f1b;
+  --c-nuit-laque: #8e2b24;
+
+  --bg: color-mix(in oklab, var(--c-nuit-bg) var(--nuit), var(--c-jour-bg));
+  --bg-eleve: color-mix(in oklab, var(--c-nuit-bg-eleve) var(--nuit), var(--c-jour-bg-eleve));
+  --fg: color-mix(in oklab, var(--c-nuit-fg) var(--nuit), var(--c-jour-fg));
+  --or: color-mix(in oklab, var(--c-nuit-or) var(--nuit), var(--c-jour-or));
+  --laque: color-mix(in oklab, var(--c-nuit-laque) var(--nuit), var(--c-jour-laque));
+  --or-fort: color-mix(in oklab, var(--or) 76%, var(--fg));
+
+  --fg-70: color-mix(in oklab, var(--fg) 70%, transparent);
+  --fg-38: color-mix(in oklab, var(--fg) 38%, transparent);
+  --trait: color-mix(in oklab, var(--fg) 13%, transparent);
+  --trait-fort: color-mix(in oklab, var(--fg) 26%, transparent);
+
+  /* Typographie */
+  --t-display-xl: clamp(3.5rem, 11vw, 9rem);
+  --t-display-l: clamp(2.25rem, 5vw, 4rem);
+  --t-display-m: clamp(1.5rem, 2.5vw, 2.25rem);
+  --t-display-s: clamp(1.125rem, 1.6vw, 1.375rem);
+  --t-corps-l: 1.25rem;
+  --t-corps: 1.0625rem;
+  --t-cartel: 0.75rem;
+
+  --lh-display-xl: 0.92;
+  --lh-display-l: 1.02;
+  --lh-display-m: 1.15;
+  --lh-display-s: 1.25;
+  --lh-corps: 1.65;
+
+  --ls-display-xl: -0.03em;
+  --ls-display-l: -0.02em;
+  --ls-cartel: 0.14em;
+
+  --mesure: 62ch;
+
+  /* Rythme */
+  --rythme-acte: 4rem; /* 64 mobile */
+  --gouttiere: max(1.25rem, env(safe-area-inset-left), env(safe-area-inset-right));
+
+  /* Rayons */
+  --r-0: 0px;
+  --r-1: 2px;
+  --r-pill: 999px;
+
+  /* Mouvement */
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --d-1: 180ms;
+  --d-2: 280ms;
+  --d-3: 420ms;
+  --press: 0.97;
+}
+
+@media (min-width: 48rem) {
+  :root {
+    --rythme-acte: 6rem; /* 96 tablette */
+    --gouttiere: 2rem;
+  }
+}
+
+@media (min-width: 80rem) {
+  :root {
+    --rythme-acte: 9rem; /* 144 desktop */
+    --gouttiere: 3rem;
+  }
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-bg-eleve: var(--bg-eleve);
+  --color-fg: var(--fg);
+  --color-fg-70: var(--fg-70);
+  --color-fg-38: var(--fg-38);
+  --color-trait: var(--trait);
+  --color-trait-fort: var(--trait-fort);
+  --color-or: var(--or);
+  --color-or-fort: var(--or-fort);
+  --color-laque: var(--laque);
+
+  --font-display: var(--font-bodoni), ui-serif, Georgia, serif;
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+
+  --radius-nette: var(--r-0);
+  --radius-cartel: var(--r-1);
+  --radius-pill: var(--r-pill);
+
+  --ease-maison: var(--ease);
+}

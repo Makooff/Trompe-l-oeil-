@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round">
+  <title>Maison Leurre</title>
+  <path d="M32 4a28 28 0 1 1 0 56a28 28 0 1 1 0-56"/>
+    <path d="M32 6v52"/>
+    <path d="M30 21c-6.2 0.4-11 4.6-12.4 9.6L14.6 31.4v1.2l3 0.8C19 38.4 23.8 42.6 30 43"/>
+    <path d="M34 21c6.2 0.4 11 4.6 12.4 9.6l3 0.8v1.2l-3 0.8C45 38.4 40.2 42.6 34 43"/>
+    <path d="M34 25.5c3.9 0 7 2.9 7 6.5s-3.1 6.5-7 6.5"/>
+    <path d="M34 29.6a2.4 2.4 0 0 1 0 4.8"/>
+</svg>
