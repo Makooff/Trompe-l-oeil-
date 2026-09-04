@@ -11,16 +11,28 @@ import { creations } from "@/content/creations";
 import { maison } from "@/content/maison";
 
 const AVANT_SCENE = ["citron", "caillou", "savon"];
-const pieces = creations.filter((c) => AVANT_SCENE.includes(c.id));
+const numeroDe = (id: string) =>
+  String(creations.findIndex((c) => c.id === id) + 1).padStart(2, "0");
+
+const MATIERES = ["Glaçage miroir", "Chocolat tempéré", "Sucre glace", "Marbre"];
 
 /** Gouttière et rythme d'acte : tout vient des tokens, rien en dur. */
 const acte =
   "px-[var(--gouttiere)] py-[var(--rythme-acte)] max-w-[80rem] mx-auto";
 
+/**
+ * Emplacement d'un acte 3D. Un aplat, sans bordure ni libellé : le vide assumé
+ * vaut mieux qu'une étiquette de maquette. La scène vient l'occuper.
+ */
+function Socle({ ratio }: { ratio: string }) {
+  return <div className={`${ratio} w-full bg-bg-eleve`} aria-hidden="true" />;
+}
+
 export default function Page() {
   return (
     <main>
-      {/* 00 — Seuil. Plein jour, plat comme une affiche. */}
+      {/* 00 — Seuil. Plein jour, plat comme une affiche.
+          Une seule dominante : le nom. Pas de cadre — le blanc porte l'affiche. */}
       <section
         id="seuil"
         aria-labelledby="seuil-titre"
@@ -34,14 +46,13 @@ export default function Page() {
           depuis {maison.fondation}
         </p>
 
-        <div className="border border-trait p-6 md:p-12 my-12">
+        <div className="py-16">
           <h1 id="seuil-titre" className="sr-only">
             {maison.nom} — pâtisserie trompe-l&apos;œil
           </h1>
           <Marque as="div" />
-          <Filet className="my-8" />
+          <Filet className="mt-12 mb-8 max-w-[36rem]" />
           <p className="t-display-m mesure m-0">{maison.signature}</p>
-          <p className="text-fg-70 mesure mt-6 mb-0">{maison.chapo}</p>
         </div>
 
         <div className="flex flex-wrap items-center gap-6 justify-between">
@@ -55,21 +66,18 @@ export default function Page() {
       {/* 01 — La Vitrine. La lumière tombe, l'échelle ment. */}
       <section id="vitrine" aria-labelledby="vitrine-titre" className={acte}>
         <ActeHeading acte={acteParId.vitrine} />
-        <div
-          className="aspect-16/9 w-full border border-trait grid place-items-center"
-          aria-hidden="true"
-        >
-          <span className="t-cartel text-fg-38">Vitrine</span>
-        </div>
+        <Socle ratio="aspect-16/9" />
       </section>
 
       {/* 02 — Le Mensonge. Trois pièces, trois coupes. */}
       <section id="mensonge" aria-labelledby="mensonge-titre" className={acte}>
         <ActeHeading acte={acteParId.mensonge} />
         <div className="grid gap-6 md:grid-cols-3">
-          {pieces.map((c) => (
-            <CreationCard key={c.id} creation={c} />
-          ))}
+          {creations
+            .filter((c) => AVANT_SCENE.includes(c.id))
+            .map((c) => (
+              <CreationCard key={c.id} creation={c} numero={numeroDe(c.id)} />
+            ))}
         </div>
       </section>
 
@@ -80,29 +88,19 @@ export default function Page() {
         className={acte}
       >
         <ActeHeading acte={acteParId.anamorphose} />
-        <div
-          className="aspect-16/9 w-full border border-trait grid place-items-center"
-          aria-hidden="true"
-        >
-          <span className="t-cartel text-fg-38">Leurre</span>
-        </div>
+        <Socle ratio="aspect-16/9" />
       </section>
 
       {/* 04 — Les Matières. */}
       <section id="matieres" aria-labelledby="matieres-titre" className={acte}>
         <ActeHeading acte={acteParId.matieres} />
         <ul className="grid gap-6 grid-cols-2 lg:grid-cols-4 list-none p-0 m-0">
-          {["Glaçage miroir", "Chocolat tempéré", "Sucre glace", "Marbre"].map(
-            (m) => (
-              <li key={m}>
-                <div
-                  className="aspect-square w-full border border-trait mb-4"
-                  aria-hidden="true"
-                />
-                <p className="t-cartel text-fg-70 m-0">{m}</p>
-              </li>
-            ),
-          )}
+          {MATIERES.map((m) => (
+            <li key={m}>
+              <Socle ratio="aspect-square" />
+              <p className="t-cartel text-fg-70 mt-4 mb-0">{m}</p>
+            </li>
+          ))}
         </ul>
       </section>
 
@@ -122,30 +120,33 @@ export default function Page() {
       {/* 06 — La Maison. */}
       <section id="maison" aria-labelledby="maison-titre" className={acte}>
         <ActeHeading acte={acteParId.maison} />
-        <div className="grid gap-12 lg:grid-cols-2">
-          <address className="not-italic">
-            <p className="t-display-m m-0">{maison.adresse}</p>
-            <p className="t-display-m mt-1 mb-6">{maison.ville}</p>
-            <Filet className="mb-6" />
-            <p className="t-cartel text-fg-70 m-0">{maison.horaires}</p>
-            <p className="t-cartel text-fg-70 mt-3 mb-0">
-              <a
-                href={`tel:${maison.telephone.replace(/\s/g, "")}`}
-                className="hover:text-or transition-colors duration-[var(--d-2)] ease-[var(--ease)]"
-              >
-                {maison.telephone}
-              </a>
-              <span className="mx-2 text-trait-fort" aria-hidden="true">
-                ·
-              </span>
-              <a
-                href={`mailto:${maison.email}`}
-                className="hover:text-or transition-colors duration-[var(--d-2)] ease-[var(--ease)]"
-              >
-                {maison.email}
-              </a>
-            </p>
-          </address>
+        <div className="grid gap-16 lg:grid-cols-2 lg:gap-24">
+          <div>
+            <p className="text-fg-70 mesure mt-0 mb-12">{maison.chapo}</p>
+            <address className="not-italic">
+              <p className="t-display-m m-0">{maison.adresse}</p>
+              <p className="t-display-m mt-1 mb-8">{maison.ville}</p>
+              <Filet className="mb-6" />
+              <p className="t-cartel text-fg-70 m-0">{maison.horaires}</p>
+              <p className="t-cartel text-fg-70 mt-3 mb-0">
+                <a
+                  href={`tel:${maison.telephone.replace(/\s/g, "")}`}
+                  className="hover:text-or transition-colors duration-[var(--d-2)] ease-[var(--ease)]"
+                >
+                  {maison.telephone}
+                </a>
+                <span className="mx-2 text-trait-fort" aria-hidden="true">
+                  ·
+                </span>
+                <a
+                  href={`mailto:${maison.email}`}
+                  className="hover:text-or transition-colors duration-[var(--d-2)] ease-[var(--ease)]"
+                >
+                  {maison.email}
+                </a>
+              </p>
+            </address>
+          </div>
           <ReserverForm />
         </div>
       </section>

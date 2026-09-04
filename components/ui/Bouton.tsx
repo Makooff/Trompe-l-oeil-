@@ -9,8 +9,9 @@ const base =
   "ease-[var(--ease)] active:scale-[0.97]";
 
 const variantes: Record<Variante, string> = {
-  // L'or est réservé aux points de décision. Un seul bouton primaire par écran.
-  primaire: "bg-or text-bg rounded-[var(--r-pill)] hover:bg-fg hover:text-bg",
+  // L'or est réservé aux points de décision : un seul bouton primaire par écran.
+  // Le survol fonce l'or, il ne change pas de teinte.
+  primaire: "bg-or text-bg rounded-[var(--r-pill)] hover:bg-or-fort",
   fantome:
     "border border-trait-fort text-fg rounded-[var(--r-0)] hover:border-fg hover:bg-bg-eleve",
 };
