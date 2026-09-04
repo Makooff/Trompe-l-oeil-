@@ -1,4 +1,3 @@
-import { HeroCoupe } from "@/components/mobile/HeroCoupe";
 import { ActeHeading } from "@/components/ui/ActeHeading";
 import { Bouton } from "@/components/ui/Bouton";
 import { CarteRow } from "@/components/ui/CarteRow";
@@ -7,6 +6,7 @@ import { Marque } from "@/components/ui/Marque";
 import { RailCollection } from "@/components/ui/RailCollection";
 import { ReserverForm } from "@/components/ui/ReserverForm";
 import { ScrollHint } from "@/components/ui/ScrollHint";
+import { SequenceCoupe } from "@/components/ui/SequenceCoupe";
 import { acteParId } from "@/content/actes";
 import { creations } from "@/content/creations";
 import { maison } from "@/content/maison";
@@ -57,11 +57,10 @@ export default function Page() {
       {/* 01. La Vitrine. La lumière tombe et la pièce se coupe derrière le texte. */}
       <section id="vitrine" aria-labelledby="vitrine-titre" className={acte} data-curseur="lame">
         <ActeHeading acte={acteParId.vitrine} />
-        {/* Grand écran : la coupe se joue dans le canvas derrière le texte.
-            Tactile : HeroCoupe la joue en CSS, sans WebGL. */}
-        <div className="hidden lg:block h-[60svh]" aria-hidden="true" />
-        <div className="mt-12 lg:hidden">
-          <HeroCoupe id="citron" faux="Citron" />
+        {/* La coupe, en séquence d'images pilotée par le scroll. Même
+            composant sur grand écran et sur iPhone. */}
+        <div className="mt-12 lg:mt-4 lg:ml-auto lg:w-[min(52vw,calc(78svh*var(--ratio)))]" style={{ "--ratio": "1.5" } as React.CSSProperties}>
+          <SequenceCoupe id="citron" faux="Citron" />
         </div>
       </section>
 

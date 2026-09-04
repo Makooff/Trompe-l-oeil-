@@ -1,0 +1,7 @@
+{
+  "images": 72,
+  "largeur": 864,
+  "hauteur": 1080,
+  "fps": 20,
+  "motif": "coupe-%03d.webp"
+}

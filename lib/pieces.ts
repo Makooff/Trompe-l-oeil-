@@ -1,5 +1,4 @@
-import type { VariantePiece } from "@/components/scene/PieceRelief";
-
+export type VariantePiece = "ferme" | "coupe";
 export type Taille = 512 | 1024 | 2048;
 
 /** Chemins publics d'une image de pièce, telle que produite par scripts/pieces.mjs. */

@@ -30,10 +30,10 @@ npm run build
 | `app/styles/tokens.css` | Le design system entier. Aucune valeur visuelle ailleurs. |
 | `content/` | La maison, les huit créations, les sept actes. |
 | `components/ui/` | Composants 2D. |
-| `components/scene/` | La scène 3D, sur un canvas unique et persistant. `PieceRelief` met une photo en volume. |
-| `components/mobile/` | La coupe du hero en CSS pour le tactile, sans WebGL. |
+| `components/scene/` | La scène 3D, sur un canvas unique et persistant : l'affiche qui se décolle et la salle. |
+| `components/ui/SequenceCoupe.tsx` | La coupe du hero : une séquence d'images pilotée par le scroll, même code partout. |
 | `docs/comfyui.md` | Guide de production des images, prompts des huit pièces. |
-| `scripts/` | Export des rendus (`pieces.mjs`), marque (`marque.mjs`), image de garde. |
+| `scripts/` | Export des rendus (`pieces.mjs`), découpe de la vidéo (`sequence.mjs`), marque, images de garde. |
 | `lib/scroll/` | Bornes des actes et progression, partagées par le 2D et la 3D. |
 | `public/models/` | Slot GLTF pour remplacer les géométries procédurales. |
 
@@ -52,17 +52,24 @@ côtés.
 
 ## Les images des pièces
 
-`public/pieces/<id>/` contient, par pièce, la photo fermée, la coupe et leurs
-cartes de profondeur, en trois tailles. `lib/pieces.ts` liste les pièces déjà
-rendues ; les autres montrent un socle vide en attendant. `scripts/garde-citron.mjs`
-fabrique une image de garde pour tester la mécanique.
+`public/pieces/<id>/` contient, par pièce, la photo fermée et la coupe en trois
+tailles. `public/sequences/citron/` contient la vidéo de coupe découpée en
+images. `lib/pieces.ts` liste les pièces déjà rendues ; les autres montrent un
+socle vide en attendant. `scripts/garde-citron.mjs` et `scripts/garde-sequence.mjs`
+fabriquent des images de garde pour tester la mécanique.
+
+## La coupe au scroll
+
+`SequenceCoupe` dessine sur un canvas 2D l'image de la séquence qui correspond
+à la progression du bloc dans l'écran. Pas de `<video>` : chercher une position
+dans un fichier compressé saccade, surtout sur Safari iOS. Les images se
+chargent par ordre d'importance, la première et la dernière d'abord.
 
 ## Deux niveaux de rendu
 
-`lib/perf/useTier.ts` décide au montage. Le tier complet monte le canvas : le
-citron est un plan en relief déplacé par sa carte de profondeur, et la coupe
-s'écarte au scroll. Le tier réduit, sur petit écran ou pointeur grossier, ne
-monte aucun WebGL : `HeroCoupe` joue la coupe avec deux images en `clip-path`.
+`lib/perf/useTier.ts` décide au montage. Le tier complet monte le canvas WebGL
+pour l'affiche qui se décolle et la salle. Le tier réduit, sur petit écran ou
+pointeur grossier, ne monte aucun WebGL ; la coupe, elle, est la même partout.
 
 ## La progression du scroll
 

@@ -1,7 +1,7 @@
 /**
  * Image de garde du citron, pour valider la mécanique de coupe avant les rendus
  * ComfyUI. Une ellipse jaune velours, sa coupe en anneaux, et deux cartes de
- * profondeur. Écrit dans rendus/citron/, puis `node scripts/pieces.mjs citron`.
+ * Écrit dans rendus/citron/, puis `node scripts/pieces.mjs citron`.
  * Vos vrais rendus écrasent ces fichiers.
  */
 import sharp from "sharp";
@@ -29,10 +29,7 @@ const coupe = `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}
 <g clip-path="url(#k)"><ellipse cx="512" cy="700" rx="330" ry="270" filter="url(#g)" opacity="0.6"/></g>
 </svg>`;
 
-const prof = (r) => `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}"><defs><radialGradient id="p" cx="0.5" cy="0.5" r="0.5"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#000000"/></radialGradient></defs><rect width="100%" height="100%" fill="#000"/><ellipse cx="512" cy="700" rx="330" ry="270" fill="url(#p)" opacity="${r}"/></svg>`;
 
 await sharp(Buffer.from(ferme)).png().toFile(`${out}/ferme.png`);
 await sharp(Buffer.from(coupe)).png().toFile(`${out}/coupe.png`);
-await sharp(Buffer.from(prof(1))).png().toFile(`${out}/profondeur-ferme.png`);
-await sharp(Buffer.from(prof(0.35))).png().toFile(`${out}/profondeur-coupe.png`);
 console.log("garde ok");
