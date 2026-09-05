@@ -42,7 +42,7 @@ npm run build
 | `lib/panier.ts` | Le panier, un store de module persisté dans localStorage. |
 | `app/api/commande/` | Reçoit commandes et inscriptions, les transmet à `COMMANDE_WEBHOOK_URL`. |
 | `public/pieces/<id>/` | Photo fermée et coupe de chaque pièce, en trois tailles. |
-| `public/sequences/citron/` | La vidéo de coupe découpée en images pour le scroll. |
+| `public/sequences/caillou/` | La vidéo de coupe du citron découpée en images pour le hero. |
 | `scripts/` | Export des rendus, découpe de la vidéo, images de garde. |
 | `docs/comfyui.md` | Guide de production des images et de la vidéo, prompts. |
 

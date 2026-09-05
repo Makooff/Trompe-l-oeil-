@@ -1,26 +1,24 @@
-import { existsSync } from "node:fs";
-import { join } from "node:path";
+import { HeroCoupe } from "./HeroCoupe";
 import { RetraitDate } from "./RetraitDate";
-import { SequenceCoupe } from "./ui/SequenceCoupe";
 import { creationParId } from "@/content/creations";
 import { maison } from "@/content/maison";
 
 /**
- * L'accueil en deux blocs, comme une page de click & collect : à gauche le
- * nom, les créations du moment, l'adresse et les horaires ; à droite, sur
- * noir, le jour de retrait. Dessous, la pièce vedette qui s'ouvre au
- * scroll, seulement quand sa séquence vidéo existe (scripts/sequence.mjs).
+ * L'accueil : la pièce vedette plein écran qui s'ouvre au scroll, puis le
+ * bloc de click & collect, à gauche le nom, les créations du moment,
+ * l'adresse et les horaires ; à droite, sur noir, le jour de retrait.
  */
 export function Hero() {
-  const vedette = creationParId.citron;
-  const sequence = existsSync(join(process.cwd(), "public", "sequences", vedette.id, "manifeste.json"));
+  const vedette = creationParId.caillou;
   return (
     <>
-      <section className="pt-[var(--barre)] grid lg:grid-cols-[1.4fr_1fr]" aria-label="Accueil">
+      <HeroCoupe id={vedette.id} nom={vedette.nom} accroche={maison.accroche} maison={maison.nom} />
+
+      <section className="grid lg:grid-cols-[1.4fr_1fr]" aria-label="Commander">
         <div className="bg-fond-doux px-[var(--gouttiere)] py-16 lg:py-24 lg:pl-[max(var(--gouttiere),12vw)]">
           <p className="t-etiquette-l tracking-[0.3em] font-medium m-0">{maison.nom}</p>
           <p className="t-etiquette text-gris mt-12 mb-2">À la commande ou en boutique</p>
-          <h1 className="t-grand">Nos créations du moment</h1>
+          <h2 className="t-grand">Nos créations du moment</h2>
           <address className="not-italic text-gris mt-6">
             {maison.adresse}, {maison.ville}
             <br />
@@ -46,14 +44,6 @@ export function Hero() {
         </div>
       </section>
 
-      {sequence && (
-        <section className="px-[var(--gouttiere)] pt-16 lg:pt-20 flex flex-col items-center" aria-label="La coupe">
-          <div className="w-full max-w-[min(60svh,34rem)]">
-            <SequenceCoupe id={vedette.id} faux={vedette.nom} pilotage="bloc" />
-          </div>
-          <p className="t-etiquette text-gris mt-2 mb-0 text-center">Descendez, la pièce s&apos;ouvre.</p>
-        </section>
-      )}
     </>
   );
 }

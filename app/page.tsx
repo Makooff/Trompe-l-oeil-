@@ -4,35 +4,11 @@ import { Bandeau } from "@/components/Bandeau";
 import { Hero } from "@/components/Hero";
 import { Bouton } from "@/components/ui/Bouton";
 import { Lame } from "@/components/ui/Lame";
-import { collections, creations } from "@/content/creations";
+import { creations } from "@/content/creations";
 import { maison } from "@/content/maison";
 import { PIECES_AVEC_COUPE, srcSetPiece } from "@/lib/pieces";
 
 const section = "px-[var(--gouttiere)] mt-[var(--section)]";
-
-function TuileCollection({ categorie }: { categorie: "fruit" | "coque" }) {
-  const c = collections[categorie];
-  const vedette = creations.find((x) => x.categorie === categorie)!;
-  return (
-    <Link href={`/patisseries?collection=${categorie}`} className="group block">
-      <div className="relative aspect-4/5 md:aspect-square bg-fond-doux overflow-hidden rounded-image">
-        <img
-          src={`/pieces/${vedette.id}/ferme-1024.webp`}
-          srcSet={srcSetPiece(vedette.id, "ferme", "webp")}
-          sizes="(min-width: 48rem) 50vw, 100vw"
-          alt=""
-          loading="lazy"
-          decoding="async"
-          className="absolute inset-0 h-full w-full object-cover transition-transform duration-[var(--d-4)] ease-[var(--ease)] group-hover:scale-[1.06] motion-reduce:transition-none motion-reduce:group-hover:scale-100"
-        />
-      </div>
-      <div className="pt-4">
-        <p className="t-petit-titre">{c.nom}</p>
-        <p className="text-gris mt-1 mb-0">{c.sousTitre}</p>
-      </div>
-    </Link>
-  );
-}
 
 export default function Page() {
   return (
@@ -45,14 +21,6 @@ export default function Page() {
         <p className="mt-8 mb-0">
           <Link href="/patisseries" className="t-etiquette lien">Toutes les pièces</Link>
         </p>
-      </section>
-
-      <section className={section} aria-labelledby="collections">
-        <h2 id="collections" className="sr-only">Collections</h2>
-        <div className="grid gap-8 md:grid-cols-2 md:gap-3">
-          <TuileCollection categorie="fruit" />
-          <TuileCollection categorie="coque" />
-        </div>
       </section>
 
       <section className={section} aria-labelledby="trompe">
