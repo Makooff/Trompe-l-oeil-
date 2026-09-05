@@ -14,7 +14,7 @@ function TuileCollection({ categorie }: { categorie: "fruit" | "coque" }) {
   const vedette = creations.find((x) => x.categorie === categorie)!;
   return (
     <Link href={`/patisseries?collection=${categorie}`} className="group block">
-      <div className="relative aspect-4/5 md:aspect-square bg-fond-doux overflow-hidden">
+      <div className="relative aspect-4/5 md:aspect-square bg-fond-doux overflow-hidden rounded-image">
         <img
           src={`/pieces/${vedette.id}/ferme-1024.webp`}
           srcSet={srcSetPiece(vedette.id, "ferme", "webp")}
@@ -22,7 +22,7 @@ function TuileCollection({ categorie }: { categorie: "fruit" | "coque" }) {
           alt=""
           loading="lazy"
           decoding="async"
-          className="absolute inset-0 h-full w-full object-cover transition-transform duration-[var(--d-3)] ease-[var(--ease)] group-hover:scale-[1.03]"
+          className="absolute inset-0 h-full w-full object-cover transition-transform duration-[var(--d-4)] ease-[var(--ease)] group-hover:scale-[1.06] motion-reduce:transition-none motion-reduce:group-hover:scale-100"
         />
       </div>
       <div className="pt-4">
@@ -60,7 +60,7 @@ export default function Page() {
             {PIECES_AVEC_COUPE.has("poire") ? (
               <Lame id="poire" faux="Framboise" className="aspect-4/5" />
             ) : (
-              <div className="aspect-[482/666] bg-fond-doux overflow-hidden">
+              <div className="aspect-[482/666] bg-fond-doux overflow-hidden rounded-image">
                 <img
                   src="/pieces/poire/ferme-1024.webp"
                   srcSet={srcSetPiece("poire", "ferme", "webp")}

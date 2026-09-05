@@ -75,7 +75,7 @@ export function FicheModale({ creation: c, precedente, suivante }: { creation: C
       className="fixed inset-0 m-0 max-w-none max-h-none w-full h-full p-0 bg-transparent text-noir"
     >
       <div className="min-h-full flex items-stretch lg:items-center justify-center lg:p-[var(--gouttiere)]">
-        <article className="relative w-full lg:w-[min(100%,72rem)] lg:h-[min(85svh,50rem)] bg-blanc grid lg:grid-cols-2 lg:grid-rows-[minmax(0,1fr)] overflow-y-auto lg:overflow-hidden">
+        <article className="relative w-full lg:w-[min(100%,72rem)] lg:h-[min(85svh,50rem)] bg-blanc grid lg:grid-cols-2 lg:grid-rows-[minmax(0,1fr)] overflow-y-auto lg:overflow-hidden lg:rounded-image">
           <div className="relative bg-fond-doux aspect-square lg:aspect-auto lg:min-h-0">
             <div
               ref={bande}

@@ -51,7 +51,7 @@ export default function Page() {
 
         <div className="grid gap-4 grid-cols-2">
           {["poire", "caillou", "oeuf", "noisette"].map((id) => (
-            <div key={id} className="aspect-4/5 bg-fond-doux">
+            <div key={id} className="aspect-4/5 bg-fond-doux overflow-hidden rounded-image">
               <img
                 src={`/pieces/${id}/ferme-1024.webp`}
                 srcSet={srcSetPiece(id, "ferme", "webp")}

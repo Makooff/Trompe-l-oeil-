@@ -1,5 +1,6 @@
 import { RetraitDate } from "./RetraitDate";
 import { SequenceCoupe } from "./ui/SequenceCoupe";
+import { creationParId } from "@/content/creations";
 import { maison } from "@/content/maison";
 
 /**
@@ -8,6 +9,7 @@ import { maison } from "@/content/maison";
  * noir, le jour de retrait. Dessous, le citron qui s'ouvre au scroll.
  */
 export function Hero() {
+  const vedette = creationParId.citron;
   return (
     <>
       <section className="pt-[var(--barre)] grid lg:grid-cols-[1.4fr_1fr]" aria-label="Accueil">
@@ -40,11 +42,11 @@ export function Hero() {
         </div>
       </section>
 
-      <section className="px-[var(--gouttiere)] pt-16 lg:pt-20 flex flex-col items-center" aria-label="Le citron">
+      <section className="px-[var(--gouttiere)] pt-16 lg:pt-20 flex flex-col items-center" aria-label="La coupe">
         <div className="w-full max-w-[min(60svh,34rem)]">
-          <SequenceCoupe id="citron" faux="Citron" pilotage="bloc" />
+          <SequenceCoupe id={vedette.id} faux={vedette.nom} pilotage="bloc" />
         </div>
-        <p className="t-etiquette text-gris mt-2 mb-0 text-center">Descendez, le citron s&apos;ouvre.</p>
+        <p className="t-etiquette text-gris mt-2 mb-0 text-center">Descendez, la pièce s&apos;ouvre.</p>
       </section>
     </>
   );

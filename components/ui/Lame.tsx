@@ -50,7 +50,7 @@ export function Lame({
     <div
       ref={cadre}
       data-curseur="lame"
-      className={`relative select-none overflow-hidden bg-fond-doux ${className}`}
+      className={`relative select-none overflow-hidden rounded-image bg-fond-doux ${className}`}
       style={{ touchAction: "pan-y" }}
       onPointerDown={(e) => {
         e.currentTarget.setPointerCapture(e.pointerId);
