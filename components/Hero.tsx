@@ -12,7 +12,7 @@ export function Hero() {
   const vedette = creationParId.caillou;
   return (
     <>
-      <HeroCoupe id={vedette.id} nom={vedette.nom} accroche={maison.accroche} maison={maison.nom} />
+      <HeroCoupe id={vedette.id} nom={vedette.nom} signature={maison.signature} />
 
       <section className="grid lg:grid-cols-[1.4fr_1fr]" aria-label="Commander">
         <div className="bg-fond-doux px-[var(--gouttiere)] py-16 lg:py-24 lg:pl-[max(var(--gouttiere),12vw)]" data-reveal>

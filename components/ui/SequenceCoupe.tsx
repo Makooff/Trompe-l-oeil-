@@ -113,6 +113,9 @@ export function SequenceCoupe({
     const images: (HTMLImageElement | null)[] = new Array(manifeste.images).fill(null);
     const reduit = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     let cible = reduit ? Math.round((manifeste.images - 1) * 0.5) : 0;
+    // L'image courante rattrape la cible avec un amorti : un cran de molette
+    // saute dix images, l'œil les voit toutes défiler.
+    let courant = cible;
     let dessinee = -1;
     let raf = 0;
     let vivant = true;
@@ -140,7 +143,13 @@ export function SequenceCoupe({
 
     const dessiner = () => {
       raf = 0;
-      const img = plusProche(cible);
+      const ecart = cible - courant;
+      if (Math.abs(ecart) < 0.05) courant = cible;
+      else {
+        courant += ecart * (reduit ? 1 : 0.16);
+        raf = requestAnimationFrame(dessiner);
+      }
+      const img = plusProche(Math.round(courant));
       if (!img) return;
       const index = images.indexOf(img);
       if (index === dessinee) return;

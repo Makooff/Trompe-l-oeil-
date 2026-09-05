@@ -1,6 +1,7 @@
 export const maison = {
   nom: "Maison Leurre",
   accroche: "Pâtisserie trompe-l'œil, Mons",
+  signature: "Ne croyez pas vos yeux.",
   presentation:
     "Des fruits qui n'en sont pas. Chaque pièce est sculptée à la main dans notre atelier de la rue de la Coupe, puis glacée pour ressembler à s'y méprendre à ce qu'elle imite. Coupez-la : dedans, c'est un dessert.",
   adresse: "14 rue de la Coupe",
