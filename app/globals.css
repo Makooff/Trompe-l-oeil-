@@ -48,6 +48,11 @@ a {
   text-decoration: none;
 }
 
+button,
+[role="button"] {
+  cursor: pointer;
+}
+
 /* Typographie */
 
 .t-grand {
@@ -221,16 +226,37 @@ dialog[data-fiche]::backdrop {
   animation: fiche-voile var(--d-2) var(--ease) both;
 }
 
-dialog[data-fiche] article {
+dialog[data-fiche]:not([data-depuis-carte]) article {
   animation: fiche-entree 360ms var(--ease) both;
 }
 
-dialog[data-fiche][data-fermeture] article {
+dialog[data-fiche][data-fermeture]:not([data-depuis-carte]) article {
   animation: fiche-sortie var(--d-1) var(--ease) both;
 }
 
 dialog[data-fiche][data-fermeture]::backdrop {
   animation: fiche-voile var(--d-1) var(--ease) reverse both;
+}
+
+/* Sur grand écran, le fond blanc de la fenêtre est un calque à part : il
+   arrive en fondu pendant que la photo grandit depuis sa carte. */
+@media (min-width: 64rem) {
+  dialog[data-fiche] article::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: var(--blanc);
+    border-radius: inherit;
+  }
+
+  dialog[data-fiche][data-depuis-carte] article::before {
+    animation: fiche-voile 320ms var(--ease) 60ms both;
+  }
+
+  dialog[data-fiche][data-depuis-carte][data-fermeture] article::before {
+    animation: fiche-voile 200ms var(--ease) reverse both;
+  }
 }
 
 @keyframes fiche-voile {

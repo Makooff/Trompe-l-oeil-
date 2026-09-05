@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { LienCarte } from "./LienCarte";
 import { PanierRapide } from "./PanierRapide";
 import type { Creation } from "@/content/creations";
 import { PIECES_AVEC_COUPE, srcSetPiece } from "@/lib/pieces";
@@ -35,9 +35,9 @@ export function CarteProduit({
 }) {
   const coupe = PIECES_AVEC_COUPE.has(creation.id);
   return (
-    <div className="group relative">
-      <Link href={`/patisseries/${creation.id}`} className="block outline-none">
-        <div className="relative aspect-square bg-fond-doux overflow-hidden rounded-image">
+    <div className="group relative" data-carte={creation.id}>
+      <LienCarte id={creation.id} className="block outline-none">
+        <div className="relative aspect-square bg-fond-doux overflow-hidden rounded-image" data-image>
           <picture>
             <source type="image/avif" srcSet={srcSetPiece(creation.id, "ferme", "avif")} sizes={sizes} />
             <img
@@ -84,7 +84,7 @@ export function CarteProduit({
           <span className="t-etiquette-l">{creation.nom}</span>
           <span className="t-etiquette-l text-gris">{creation.prixEuros} €</span>
         </div>
-      </Link>
+      </LienCarte>
       <PanierRapide
         id={creation.id}
         nom={creation.nom}

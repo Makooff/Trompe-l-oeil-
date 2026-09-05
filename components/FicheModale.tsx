@@ -6,6 +6,7 @@ import { useEffect, useRef, useState } from "react";
 import { Bouton } from "./ui/Bouton";
 import { collections, type Creation } from "@/content/creations";
 import { maison } from "@/content/maison";
+import { origineFiche, rectCarte } from "@/lib/fiche";
 import { panier } from "@/lib/panier";
 import { srcSetPiece, type VariantePiece } from "@/lib/pieces";
 
@@ -31,6 +32,9 @@ export function FicheModale({ creation: c, precedente, suivante }: { creation: C
   const routeur = useRouter();
   const boite = useRef<HTMLDialogElement>(null);
   const bande = useRef<HTMLDivElement>(null);
+  const colonneImage = useRef<HTMLDivElement>(null);
+  const colonneTexte = useRef<HTMLDivElement>(null);
+  const depuisCarte = useRef(false);
   const [vue, setVue] = useState(0);
   const [quantite, setQuantite] = useState(1);
   const [ajoute, setAjoute] = useState(false);
@@ -42,10 +46,39 @@ export function FicheModale({ creation: c, precedente, suivante }: { creation: C
     d.showModal();
     const avant = document.body.style.overflow;
     document.body.style.overflow = "hidden";
+
+    // La fenêtre part de la carte cliquée : la photo grandit depuis sa
+    // place dans la grille, le texte arrive ensuite.
+    const reduit = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const image = colonneImage.current;
+    const texte = colonneTexte.current;
+    if (!reduit && image && texte && origineFiche.id === c.id && origineFiche.rect) {
+      const de = origineFiche.rect;
+      const vers = image.getBoundingClientRect();
+      depuisCarte.current = true;
+      d.setAttribute("data-depuis-carte", "");
+      image.style.transformOrigin = "top left";
+      image.animate(
+        [
+          { transform: `translate(${de.left - vers.left}px, ${de.top - vers.top}px) scale(${de.width / vers.width}, ${de.height / vers.height})` },
+          { transform: "none" },
+        ],
+        { duration: 460, easing: "cubic-bezier(0.16, 1, 0.3, 1)", fill: "both" },
+      );
+      texte.animate([{ opacity: 0, transform: "translateY(10px)" }, { opacity: 1, transform: "none" }], {
+        duration: 400,
+        delay: 140,
+        easing: "cubic-bezier(0.16, 1, 0.3, 1)",
+        fill: "both",
+      });
+    }
+    origineFiche.id = null;
+    origineFiche.rect = null;
+
     return () => {
       document.body.style.overflow = avant;
     };
-  }, []);
+  }, [c.id]);
 
   useEffect(() => {
     const el = bande.current;
@@ -62,10 +95,24 @@ export function FicheModale({ creation: c, precedente, suivante }: { creation: C
     el.scrollTo({ left: n * el.clientWidth, behavior: "smooth" });
   };
 
-  // La fenêtre redescend (globals.css, fiche-sortie) puis la route revient.
+  // La fenêtre revient sur sa carte si elle en vient, sinon elle redescend
+  // (globals.css, fiche-sortie) ; puis la route revient.
   const fermer = () => {
     if (fermeture) return;
     setFermeture(true);
+    const image = colonneImage.current;
+    const texte = colonneTexte.current;
+    const vers = depuisCarte.current ? rectCarte(c.id) : null;
+    if (image && texte && vers) {
+      const de = image.getBoundingClientRect();
+      image.animate(
+        [{ transform: "none" }, { transform: `translate(${vers.left - de.left}px, ${vers.top - de.top}px) scale(${vers.width / de.width}, ${vers.height / de.height})` }],
+        { duration: 260, easing: "cubic-bezier(0.16, 1, 0.3, 1)", fill: "both" },
+      );
+      texte.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 160, fill: "both" });
+      window.setTimeout(() => routeur.back(), 250);
+      return;
+    }
     window.setTimeout(() => routeur.back(), 170);
   };
 
@@ -85,8 +132,8 @@ export function FicheModale({ creation: c, precedente, suivante }: { creation: C
       className="fixed inset-0 m-0 max-w-none max-h-none w-full h-full p-0 bg-transparent text-noir"
     >
       <div className="min-h-full flex items-stretch lg:items-center justify-center lg:p-[var(--gouttiere)]">
-        <article className="relative w-full lg:w-[min(100%,72rem)] lg:h-[min(85svh,50rem)] bg-blanc grid lg:grid-cols-2 lg:grid-rows-[minmax(0,1fr)] overflow-y-auto lg:overflow-hidden lg:rounded-image">
-          <div className="relative bg-fond-doux aspect-square lg:aspect-auto lg:min-h-0">
+        <article className="relative isolate w-full lg:w-[min(100%,72rem)] lg:h-[min(85svh,50rem)] bg-blanc lg:bg-transparent grid lg:grid-cols-2 lg:grid-rows-[minmax(0,1fr)] overflow-y-auto lg:overflow-hidden lg:rounded-image">
+          <div ref={colonneImage} className="relative bg-fond-doux aspect-square lg:aspect-auto lg:min-h-0 rounded-image lg:rounded-none overflow-hidden">
             <div
               ref={bande}
               className="flex h-full overflow-x-auto snap-x snap-mandatory scroll-smooth [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
@@ -147,7 +194,7 @@ export function FicheModale({ creation: c, precedente, suivante }: { creation: C
             </div>
           </div>
 
-          <div className="flex flex-col lg:min-h-0 lg:overflow-y-auto">
+          <div ref={colonneTexte} className="flex flex-col lg:min-h-0 lg:overflow-y-auto">
             <div className="p-6 lg:p-10 lg:pr-16">
               <p className="t-etiquette text-gris m-0">{collections[c.categorie].nom}</p>
               <h2 id="fiche-titre" className="t-moyen mt-2 mb-0">
@@ -228,7 +275,7 @@ export function FicheModale({ creation: c, precedente, suivante }: { creation: C
         <Link
           href={`/patisseries/${precedente}`}
           replace
-          className="hidden lg:grid fixed left-0 top-1/2 -translate-y-1/2 w-16 h-32 place-items-center bg-blanc text-noir rounded-r-full transition-colors duration-[var(--d-2)] ease-[var(--ease)] hover:bg-noir hover:text-blanc"
+          className="hidden lg:grid fixed left-0 top-1/2 -translate-y-1/2 w-16 h-32 place-items-center bg-noir text-blanc rounded-r-full cursor-pointer transition-[background-color,color] duration-[var(--d-2)] ease-[var(--ease)] hover:bg-citron hover:text-noir"
           aria-label="Pièce précédente"
         >
           <Chevron sens="gauche" />
@@ -236,7 +283,7 @@ export function FicheModale({ creation: c, precedente, suivante }: { creation: C
         <Link
           href={`/patisseries/${suivante}`}
           replace
-          className="hidden lg:grid fixed right-0 top-1/2 -translate-y-1/2 w-16 h-32 place-items-center bg-blanc text-noir rounded-l-full transition-colors duration-[var(--d-2)] ease-[var(--ease)] hover:bg-noir hover:text-blanc"
+          className="hidden lg:grid fixed right-0 top-1/2 -translate-y-1/2 w-16 h-32 place-items-center bg-noir text-blanc rounded-l-full cursor-pointer transition-[background-color,color] duration-[var(--d-2)] ease-[var(--ease)] hover:bg-citron hover:text-noir"
           aria-label="Pièce suivante"
         >
           <Chevron sens="droite" />
