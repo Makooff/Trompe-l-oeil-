@@ -48,7 +48,7 @@ export function HeroCoupe({ id, nom, signature }: { id: string; nom: string; sig
           className="hero-entree absolute left-[var(--gouttiere)] right-[var(--gouttiere)] bottom-[max(2rem,env(safe-area-inset-bottom))] lg:bottom-12"
           style={{ opacity: "calc(1 - var(--t) * 3)" }}
         >
-          <h1 className="t-signature m-0 max-w-[12ch]">{signature}</h1>
+          <h1 className="t-signature m-0">{signature}</h1>
           <p className="m-0 mt-5 t-etiquette text-gris-clair">Descendez, le {nom.toLowerCase()} s&apos;ouvre.</p>
         </div>
       </div>
