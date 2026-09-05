@@ -40,17 +40,17 @@ export function HeroCoupe({ id, nom, signature }: { id: string; nom: string; sig
           className="absolute inset-0 h-full"
         />
         <div
-          className="hero-entree absolute inset-x-0 top-[calc(var(--barre)+2.5rem)] px-[var(--gouttiere)] text-center"
+          className="absolute inset-x-0 bottom-0 h-[45%] bg-linear-to-t from-noir/75 to-transparent pointer-events-none"
+          style={{ opacity: "calc(1 - var(--t) * 3)" }}
+          aria-hidden="true"
+        />
+        <div
+          className="hero-entree absolute left-[var(--gouttiere)] right-[var(--gouttiere)] bottom-[max(2rem,env(safe-area-inset-bottom))] lg:bottom-12"
           style={{ opacity: "calc(1 - var(--t) * 3)" }}
         >
-          <h1 className="t-signature m-0 mx-auto max-w-[14ch]">{signature}</h1>
+          <h1 className="t-signature m-0 max-w-[12ch]">{signature}</h1>
+          <p className="m-0 mt-5 t-etiquette text-gris-clair">Descendez, le {nom.toLowerCase()} s&apos;ouvre.</p>
         </div>
-        <p
-          className="absolute inset-x-0 bottom-[max(1.5rem,env(safe-area-inset-bottom))] m-0 t-etiquette text-gris-clair text-center"
-          style={{ opacity: "calc(1 - var(--t) * 3)" }}
-        >
-          Descendez, le {nom.toLowerCase()} s&apos;ouvre.
-        </p>
       </div>
     </section>
   );
