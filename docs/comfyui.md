@@ -349,15 +349,16 @@ main apparaît, ou où l'intérieur ne correspond pas au rendu de la coupe.
 ### Découper la vidéo
 
 ```bash
-# demande ffmpeg
-node scripts/sequence.mjs citron              # 20 images par seconde, 1080 px
-node scripts/sequence.mjs citron --fps 24     # plus fin, plus lourd
+# demande ffmpeg (ou son chemin dans FFMPEG=/chemin/vers/ffmpeg)
+node scripts/sequence.mjs caillou --fps 20 --hauteur 720   # le citron du hero
+node scripts/sequence.mjs caillou --fps 24                 # plus fin, plus lourd
 ```
 
-Le script écrit `public/sequences/citron/coupe-000.webp` et suivants, plus
-`manifeste.json`. Une centaine d'images à 1080 px pèse autour de 4 Mo ; le
-composant charge la première et la dernière d'abord, puis les milieux, et
-dessine dès trois images. En attendant votre vidéo, `node
+Le script écrit `public/sequences/<id>/coupe-000.webp` et suivants, plus
+`manifeste.json`. La vidéo MiniMax du citron (1472 × 832, 5 s) donne 103
+images à 720 px pour 2,7 Mo ; le composant charge la première et la dernière
+d'abord, puis les milieux, et dessine dès trois images. Le hero l'affiche
+plein écran dès que le manifeste existe. En attendant votre vidéo, `node
 scripts/garde-sequence.mjs` fabrique une séquence de garde depuis les images
 de garde.
 

@@ -9,7 +9,7 @@ export default function Page() {
   return (
     <div className="pt-[calc(var(--barre)+3rem)] px-[var(--gouttiere)]">
       <div className="grid gap-12 lg:grid-cols-2 lg:gap-20 items-start">
-        <div className="max-w-[32rem]">
+        <div className="max-w-[32rem]" data-reveal>
           <p className="t-etiquette text-gris m-0">La maison</p>
           <h1 className="t-grand mt-4">Rue de la Coupe, depuis {maison.fondation}.</h1>
           <p className="text-gris mt-6">{maison.presentation}</p>
@@ -50,8 +50,8 @@ export default function Page() {
         </div>
 
         <div className="grid gap-4 grid-cols-2">
-          {["poire", "caillou", "oeuf", "noisette"].map((id) => (
-            <div key={id} className="aspect-4/5 bg-fond-doux overflow-hidden rounded-image">
+          {["poire", "caillou", "oeuf", "noisette"].map((id, i) => (
+            <div key={id} className="aspect-4/5 bg-fond-doux overflow-hidden rounded-image" data-reveal style={{ "--i": i } as React.CSSProperties}>
               <img
                 src={`/pieces/${id}/ferme-1024.webp`}
                 srcSet={srcSetPiece(id, "ferme", "webp")}

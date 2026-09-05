@@ -11,7 +11,7 @@
  *   node scripts/sequence.mjs citron --fps 20 --hauteur 1080
  *   node scripts/sequence.mjs citron --nom orbite      # lit rendus/citron/orbite.mp4
  *
- * Demande ffmpeg sur la machine. Une centaine d'images WebP à 1080 px pèse
+ * Demande ffmpeg sur la machine (ou son chemin dans la variable FFMPEG). Une centaine d'images WebP à 1080 px pèse
  * autour de 4 Mo ; le composant les charge par ordre d'importance, la
  * première et la dernière d'abord, puis les milieux.
  */
@@ -50,7 +50,7 @@ await mkdir(cible, { recursive: true });
 // PNG intermédiaires : ffmpeg encode le WebP moins bien que sharp.
 const tampon = join(cible, "tmp");
 await mkdir(tampon);
-execFileSync("ffmpeg", [
+execFileSync(process.env.FFMPEG ?? "ffmpeg", [
   "-loglevel", "error",
   "-i", source,
   "-vf", `fps=${fps},scale=-2:${hauteur}`,

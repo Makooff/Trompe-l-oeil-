@@ -56,7 +56,7 @@ export default async function Page({ params }: Props) {
           )}
         </div>
 
-        <div className="lg:pt-6 lg:max-w-[28rem]">
+        <div className="lg:pt-6 lg:max-w-[28rem]" data-reveal style={{ "--i": 1 } as React.CSSProperties}>
           <p className="t-etiquette text-gris m-0">
             <Link href={`/patisseries?collection=${c.categorie}`} className="lien">
               {collections[c.categorie].nom}

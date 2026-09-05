@@ -1,16 +1,21 @@
 /* Maison Leurre, design system.
-   Blanc, une sans-serif, du noir, un gris. Le produit fait le reste. */
+   Crème de la page, encre chaude, un citron pour l'accent. Une serif douce
+   pour les titres (Fraunces), une grotesque pour le reste (Hanken). Le
+   produit fait le reste. */
 
 :root {
   /* Couleur */
   --blanc: #ffffff;
-  --noir: #111111;
-  --gris: #6f6f6f;
-  --gris-clair: #a3a3a3;
-  --filet: #e6e6e6;
-  --fond-doux: #f6f5f2;
+  --creme: #f4f0e7;
+  --noir: #171512;
+  --gris: #6d6862;
+  --gris-clair: #a39d95;
+  --filet: #e2dcd0;
+  --fond-doux: #ebe6da;
+  --citron: #f0d95a;
+  --citron-doux: #fbf3c4;
 
-  --bg: var(--blanc);
+  --bg: var(--creme);
   --fg: var(--noir);
 
   /* Typographie */
@@ -26,7 +31,7 @@
   --lh-corps: 1.6;
 
   --ls-etiquette: 0.14em;
-  --ls-grand: -0.01em;
+  --ls-grand: -0.015em;
 
   --mesure: 58ch;
 
@@ -45,6 +50,7 @@
   --d-2: 240ms;
   --d-3: 400ms;
   --d-4: 900ms; /* zoom au survol des photos */
+  --d-reveal: 700ms; /* entrée des blocs au scroll */
 }
 
 @media (min-width: 48rem) {
@@ -64,6 +70,9 @@
 
 @theme inline {
   --color-blanc: var(--blanc);
+  --color-creme: var(--creme);
+  --color-citron: var(--citron);
+  --color-citron-doux: var(--citron-doux);
   --color-noir: var(--noir);
   --color-gris: var(--gris);
   --color-gris-clair: var(--gris-clair);
@@ -73,6 +82,7 @@
   --color-fg: var(--fg);
 
   --font-sans: var(--font-hanken), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--police-titre);
 
   --radius-nette: var(--r-0);
   --radius-image: var(--r-image);

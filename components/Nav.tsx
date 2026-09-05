@@ -2,9 +2,11 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useSyncExternalStore } from "react";
+import { Marque } from "./Marque";
 import { maison } from "@/content/maison";
 import { nombreArticles, usePanier } from "@/lib/panier";
+import { sAbonner } from "@/lib/scroll/scrollStore";
 
 const LIENS = [
   { href: "/patisseries", label: "Pâtisseries" },
@@ -13,8 +15,30 @@ const LIENS = [
   { href: "/la-maison", label: "La maison" },
 ];
 
+/** Vrai tant que le hero noir de l'accueil passe encore sous la barre. */
+function useSurHero(accueil: boolean) {
+  return useSyncExternalStore(
+    (cb) => {
+      const stop = sAbonner(cb);
+      window.addEventListener("resize", cb);
+      return () => {
+        stop();
+        window.removeEventListener("resize", cb);
+      };
+    },
+    () => {
+      if (!accueil) return false;
+      const hero = document.querySelector("[data-epingle]");
+      if (!hero) return false;
+      const barre = parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--barre")) * 16 || 64;
+      return hero.getBoundingClientRect().bottom > barre;
+    },
+    () => accueil,
+  );
+}
+
 /**
- * La barre. Fixe, blanche, un filet en bas. Le nom au centre, les liens à
+ * La barre. Fixe, crème, un filet en bas, transparente sur le hero noir. Le nom au centre, les liens à
  * gauche, le panier à droite. Sur petit écran, un bouton ouvre le menu en
  * plein écran.
  */
@@ -23,18 +47,15 @@ export function Nav() {
   const lignes = usePanier();
   const n = nombreArticles(lignes);
   const [ouvert, setOuvert] = useState(false);
-
-  useEffect(() => {
-    document.documentElement.style.overflow = ouvert ? "hidden" : "";
-    return () => {
-      document.documentElement.style.overflow = "";
-    };
-  }, [ouvert]);
+  const surHero = useSurHero(chemin === "/");
 
   const actif = (href: string) => chemin === href.split("?")[0] && !href.includes("?");
 
   return (
-    <header className="fixed inset-x-0 top-0 z-50 bg-blanc border-b border-filet">
+    <header
+      data-sur-hero={surHero && !ouvert ? "" : undefined}
+      className="fixed inset-x-0 top-0 z-50 bg-creme text-noir border-b border-filet transition-[background-color,color,border-color] duration-[var(--d-3)] ease-[var(--ease)] data-[sur-hero]:bg-transparent data-[sur-hero]:text-blanc data-[sur-hero]:border-transparent"
+    >
       <div className="h-[var(--barre)] px-[var(--gouttiere)] grid grid-cols-[1fr_auto_1fr] items-center">
         <nav aria-label="Principale" className="hidden lg:flex gap-7">
           {LIENS.slice(0, 3).map((l) => (
@@ -54,8 +75,8 @@ export function Nav() {
           {ouvert ? "Fermer" : "Menu"}
         </button>
 
-        <Link href="/" className="t-etiquette-l tracking-[0.22em] font-medium" aria-label={`${maison.nom}, accueil`}>
-          {maison.nom}
+        <Link href="/" aria-label={`${maison.nom}, accueil`}>
+          <Marque />
         </Link>
 
         <div className="justify-self-end flex items-center gap-7">
@@ -63,7 +84,12 @@ export function Nav() {
             La maison
           </Link>
           <Link href="/panier" className="t-etiquette lien" aria-current={actif("/panier") ? "page" : undefined}>
-            Panier{n > 0 ? ` (${n})` : ""}
+            Panier
+            {n > 0 && (
+              <span key={n} className="pop ml-1">
+                ({n})
+              </span>
+            )}
           </Link>
         </div>
       </div>
@@ -71,11 +97,11 @@ export function Nav() {
       <div
         id="menu"
         hidden={!ouvert}
-        className="lg:hidden fixed inset-x-0 top-[var(--barre)] bottom-0 bg-blanc px-[var(--gouttiere)] py-10 overflow-y-auto"
+        className="menu-entree lg:hidden fixed inset-x-0 top-[var(--barre)] bottom-0 bg-creme px-[var(--gouttiere)] py-10 overflow-y-auto"
       >
         <nav aria-label="Menu" className="grid gap-6">
-          {LIENS.map((l) => (
-            <Link key={l.href} href={l.href} className="t-moyen" onClick={() => setOuvert(false)}>
+          {LIENS.map((l, i) => (
+            <Link key={l.href} href={l.href} className="t-moyen" style={{ "--i": i } as React.CSSProperties} data-reveal onClick={() => setOuvert(false)}>
               {l.label}
             </Link>
           ))}

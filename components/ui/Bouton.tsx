@@ -5,13 +5,13 @@ type Variante = "plein" | "contour" | "clair" | "texte";
 
 const base =
   "inline-flex items-center justify-center h-12 px-7 t-etiquette-l select-none " +
-  "transition-[background-color,color,border-color,opacity] duration-[var(--d-2)] ease-[var(--ease)] " +
-  "disabled:opacity-40 disabled:pointer-events-none";
+  "transition-[background-color,color,border-color,opacity,transform] duration-[var(--d-2)] ease-[var(--ease)] " +
+  "active:scale-[0.97] disabled:opacity-40 disabled:pointer-events-none";
 
 const variantes: Record<Variante, string> = {
-  plein: "bg-noir text-blanc hover:bg-gris",
+  plein: "bg-noir text-blanc hover:bg-citron hover:text-noir",
   contour: "border border-noir text-noir hover:bg-noir hover:text-blanc",
-  clair: "border border-blanc text-blanc hover:bg-blanc hover:text-noir",
+  clair: "border border-blanc text-blanc hover:bg-citron hover:border-citron hover:text-noir",
   texte: "px-0 h-auto lien",
 };
 

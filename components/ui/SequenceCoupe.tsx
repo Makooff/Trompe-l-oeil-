@@ -62,6 +62,8 @@ export function SequenceCoupe({
   id,
   faux,
   pilotage = "bloc",
+  ajustement = "contenir",
+  affiche,
   className = "",
 }: {
   id: string;
@@ -71,7 +73,15 @@ export function SequenceCoupe({
    * `page` : elle suit le défilement depuis le haut de la page, pour un
    * hero déjà à l'écran au chargement, qui doit s'ouvrir quand on descend.
    */
-  pilotage?: "bloc" | "page";
+  pilotage?: "bloc" | "page" | "epingle";
+  /**
+   * `contenir` : l'image entière, le cadre prend l'aspect de la séquence.
+   * `couvrir` : l'image remplit le cadre, recadrée au centre ; le cadre
+   * garde l'aspect donné par `className`.
+   */
+  ajustement?: "contenir" | "couvrir";
+  /** Image affichée avant la première image dessinée, et sans JavaScript. */
+  affiche?: string;
   className?: string;
 }) {
   const cadre = useRef<HTMLDivElement>(null);
@@ -136,8 +146,8 @@ export function SequenceCoupe({
       if (index === dessinee) return;
       dessinee = index;
       ctx.clearRect(0, 0, c.width, c.height);
-      // Contenu : l'image entière tient dans le canvas, centrée.
-      const k = Math.min(c.width / img.naturalWidth, c.height / img.naturalHeight);
+      // Contenir : l'image entière tient dans le canvas. Couvrir : elle le remplit.
+      const k = (ajustement === "couvrir" ? Math.max : Math.min)(c.width / img.naturalWidth, c.height / img.naturalHeight);
       const w = img.naturalWidth * k;
       const h = img.naturalHeight * k;
       ctx.drawImage(img, (c.width - w) / 2, (c.height - h) / 2, w, h);
@@ -154,6 +164,11 @@ export function SequenceCoupe({
         // La pièce est à l'écran dès le chargement : elle s'ouvre sur les
         // deux premiers tiers d'écran de défilement.
         t = doux(clamp01(window.scrollY / (h * 0.66)));
+      } else if (pilotage === "epingle") {
+        // Le bloc est collé dans une section plus haute que l'écran
+        // ([data-epingle]) : la coupe suit la traversée de cette section.
+        const r = (el.closest("[data-epingle]") ?? el).getBoundingClientRect();
+        t = doux(clamp01(-r.top / Math.max(1, r.height - h)));
       } else {
         const r = el.getBoundingClientRect();
         const centre = r.top + r.height * CENTRE_PIECE;
@@ -198,25 +213,25 @@ export function SequenceCoupe({
       stop();
       cancelAnimationFrame(raf);
     };
-  }, [manifeste, id, pilotage]);
+  }, [manifeste, id, pilotage, ajustement]);
 
-  const ratio = manifeste ? `${manifeste.largeur} / ${manifeste.hauteur}` : "4 / 5";
+  const ratio = ajustement === "couvrir" ? undefined : manifeste ? `${manifeste.largeur} / ${manifeste.hauteur}` : "4 / 5";
 
   return (
     <div
       ref={cadre}
-      className={`relative w-full overflow-hidden rounded-image ${className}`}
+      className={`relative w-full overflow-hidden ${className}`}
       style={{ aspectRatio: ratio }}
       role="img"
       aria-label={`${faux}, la pièce s'ouvre en deux au défilement`}
     >
-      {manifeste === null && (
-        // Pas encore de séquence pour cette pièce : l'image fixe.
+      {(affiche || manifeste === null) && (
+        // Avant la première image dessinée, ou sans séquence : une image fixe.
         <img
-          src={`/pieces/${id}/ferme-1024.webp`}
+          src={affiche ?? `/pieces/${id}/ferme-1024.webp`}
           alt=""
           decoding="async"
-          className="absolute inset-0 h-full w-full object-contain"
+          className={`absolute inset-0 h-full w-full ${ajustement === "couvrir" ? "object-cover" : "object-contain"}`}
         />
       )}
       <canvas ref={canvas} className="absolute inset-0 h-full w-full" aria-hidden="true" />

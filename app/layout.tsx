@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
-import { Hanken_Grotesk } from "next/font/google";
+import { Fraunces, Hanken_Grotesk } from "next/font/google";
 import { Footer } from "@/components/Footer";
 import { Nav } from "@/components/Nav";
+import { Revelateur } from "@/components/Revelateur";
 import { Scroll } from "@/components/Scroll";
 import { maison } from "@/content/maison";
 import "./globals.css";
@@ -10,6 +11,13 @@ const hanken = Hanken_Grotesk({
   variable: "--font-hanken",
   subsets: ["latin"],
   weight: ["300", "400", "500"],
+  display: "swap",
+});
+
+const fraunces = Fraunces({
+  variable: "--font-fraunces",
+  subsets: ["latin"],
+  axes: ["SOFT", "opsz"],
   display: "swap",
 });
 
@@ -33,8 +41,11 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children, modale }: LayoutProps<"/">) {
   return (
-    <html lang="fr-BE">
-      <body className={`${hanken.variable} antialiased`}>
+    <html lang="fr-BE" suppressHydrationWarning>
+      <body className={`${hanken.variable} ${fraunces.variable} antialiased`}>
+        {/* Les blocs à révéler ne se cachent que si le script tourne. */}
+        <script dangerouslySetInnerHTML={{ __html: "document.documentElement.classList.add('js')" }} />
+        <Revelateur />
         <a
           href="#contenu"
           className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-60 focus:bg-noir focus:text-blanc focus:px-4 focus:h-11 focus:inline-flex focus:items-center t-etiquette"
