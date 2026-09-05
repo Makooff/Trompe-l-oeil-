@@ -32,7 +32,7 @@ export function Bandeau({
   const src = disponible ? `/bandeau/${nom}-1600.webp` : `/pieces/${repli}/ferme-2048.webp`;
 
   return (
-    <section className="px-[var(--gouttiere)] mt-[var(--section)]" aria-labelledby={`bandeau-${nom}`}>
+    <section className="px-[var(--gouttiere)] mt-[var(--section)]" aria-labelledby={`bandeau-${nom}`} data-reveal>
       <div className="relative overflow-hidden rounded-image bg-fond-doux aspect-4/5 md:aspect-video lg:aspect-[16/6]">
         <picture>
           <source type="image/avif" srcSet={srcSet("avif")} sizes="100vw" />

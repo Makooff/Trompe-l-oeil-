@@ -15,7 +15,7 @@ export function Hero() {
       <HeroCoupe id={vedette.id} nom={vedette.nom} accroche={maison.accroche} maison={maison.nom} />
 
       <section className="grid lg:grid-cols-[1.4fr_1fr]" aria-label="Commander">
-        <div className="bg-fond-doux px-[var(--gouttiere)] py-16 lg:py-24 lg:pl-[max(var(--gouttiere),12vw)]">
+        <div className="bg-fond-doux px-[var(--gouttiere)] py-16 lg:py-24 lg:pl-[max(var(--gouttiere),12vw)]" data-reveal>
           <p className="t-etiquette-l tracking-[0.3em] font-medium m-0">{maison.nom}</p>
           <p className="t-etiquette text-gris mt-12 mb-2">À la commande ou en boutique</p>
           <h2 className="t-grand">Nos créations du moment</h2>

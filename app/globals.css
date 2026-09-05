@@ -16,6 +16,8 @@ html {
 }
 
 body {
+  /* Les variables de next/font vivent sur body : la police des titres aussi. */
+  --police-titre: var(--font-fraunces), "Iowan Old Style", Georgia, serif;
   margin: 0;
   background-color: var(--bg);
   color: var(--fg);
@@ -27,8 +29,8 @@ body {
 }
 
 ::selection {
-  background-color: var(--noir);
-  color: var(--blanc);
+  background-color: var(--citron);
+  color: var(--noir);
 }
 
 :focus-visible {
@@ -49,17 +51,21 @@ a {
 /* Typographie */
 
 .t-grand {
+  font-family: var(--police-titre);
+  font-variation-settings: "SOFT" 100;
   font-size: var(--t-grand);
   line-height: var(--lh-grand);
   letter-spacing: var(--ls-grand);
-  font-weight: 300;
+  font-weight: 400;
   margin: 0;
 }
 
 .t-moyen {
+  font-family: var(--police-titre);
+  font-variation-settings: "SOFT" 100;
   font-size: var(--t-moyen);
   line-height: var(--lh-moyen);
-  font-weight: 300;
+  font-weight: 400;
   margin: 0;
 }
 
@@ -115,6 +121,72 @@ a {
   transform: scaleX(1);
 }
 
+/* Mouvement. Transform et opacité seulement, easing maison. */
+
+/* Entrée des blocs au scroll : data-reveal, révélé par data-vu (Revelateur).
+   Sans script, ou en mouvement réduit, tout reste visible. */
+.js [data-reveal] {
+  opacity: 0;
+  transform: translateY(14px);
+  transition:
+    opacity var(--d-reveal) var(--ease),
+    transform var(--d-reveal) var(--ease);
+  transition-delay: calc(var(--i, 0) * 60ms);
+}
+
+.js [data-reveal][data-vu] {
+  opacity: 1;
+  transform: none;
+}
+
+/* Entrée d'une page : un fondu court qui monte. */
+.page-entree {
+  animation: page-entree var(--d-3) var(--ease) both;
+}
+
+@keyframes page-entree {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+}
+
+/* Hero : le texte arrive après la première image. */
+.hero-entree {
+  animation: hero-entree 900ms var(--ease) 200ms both;
+}
+
+@keyframes hero-entree {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+}
+
+/* Menu plein écran, petit écran. */
+.menu-entree {
+  animation: menu-entree 320ms var(--ease) both;
+}
+
+@keyframes menu-entree {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+}
+
+/* Le compteur du panier saute quand il change. */
+.pop {
+  display: inline-block;
+  animation: pop var(--d-2) var(--ease) both;
+}
+
+@keyframes pop {
+  from {
+    transform: scale(1.35);
+  }
+}
+
 /* Mouvement réduit. Les animations tombent, le contenu reste entier. */
 
 @media (prefers-reduced-motion: reduce) {
@@ -131,7 +203,41 @@ a {
   }
 }
 
-/* La fiche en fenêtre : la grille reste visible, voilée. */
+/* La fiche en fenêtre : la grille reste visible, voilée. Elle monte en
+   entrant, redescend plus vite en sortant. */
 dialog[data-fiche]::backdrop {
-  background-color: rgb(246 245 242 / 0.82);
+  background-color: rgb(244 240 231 / 0.84);
+  animation: fiche-voile var(--d-2) var(--ease) both;
+}
+
+dialog[data-fiche] article {
+  animation: fiche-entree 360ms var(--ease) both;
+}
+
+dialog[data-fiche][data-fermeture] article {
+  animation: fiche-sortie var(--d-1) var(--ease) both;
+}
+
+dialog[data-fiche][data-fermeture]::backdrop {
+  animation: fiche-voile var(--d-1) var(--ease) reverse both;
+}
+
+@keyframes fiche-voile {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes fiche-entree {
+  from {
+    opacity: 0;
+    transform: translateY(14px) scale(0.985);
+  }
+}
+
+@keyframes fiche-sortie {
+  to {
+    opacity: 0;
+    transform: translateY(8px);
+  }
 }

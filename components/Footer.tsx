@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { maison } from "@/content/maison";
+import { Marque } from "./Marque";
 import { Newsletter } from "./Newsletter";
 
 export function Footer() {
@@ -7,7 +8,7 @@ export function Footer() {
     <footer className="border-t border-filet mt-[var(--section)]">
       <div className="px-[var(--gouttiere)] py-14 grid gap-12 md:grid-cols-[1.2fr_1fr_1fr_1fr]">
         <div>
-          <p className="t-etiquette-l tracking-[0.22em] font-medium m-0">{maison.nom}</p>
+          <Marque />
           <p className="text-gris mt-3 mb-0 max-w-[26rem]">{maison.accroche}. {maison.retrait}</p>
         </div>
 

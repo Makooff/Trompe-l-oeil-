@@ -34,6 +34,7 @@ export function FicheModale({ creation: c, precedente, suivante }: { creation: C
   const [vue, setVue] = useState(0);
   const [quantite, setQuantite] = useState(1);
   const [ajoute, setAjoute] = useState(false);
+  const [fermeture, setFermeture] = useState(false);
 
   useEffect(() => {
     const d = boite.current;
@@ -61,14 +62,23 @@ export function FicheModale({ creation: c, precedente, suivante }: { creation: C
     el.scrollTo({ left: n * el.clientWidth, behavior: "smooth" });
   };
 
-  const fermer = () => routeur.back();
+  // La fenêtre redescend (globals.css, fiche-sortie) puis la route revient.
+  const fermer = () => {
+    if (fermeture) return;
+    setFermeture(true);
+    window.setTimeout(() => routeur.back(), 170);
+  };
 
   return (
     <dialog
       ref={boite}
       data-fiche
+      data-fermeture={fermeture ? "" : undefined}
       aria-labelledby="fiche-titre"
-      onClose={fermer}
+      onCancel={(e) => {
+        e.preventDefault();
+        fermer();
+      }}
       onClick={(e) => {
         if (e.target === e.currentTarget) fermer();
       }}

@@ -40,11 +40,11 @@ export function HeroCoupe({ id, nom, accroche, maison }: { id: string; nom: stri
           className="absolute inset-0 h-full"
         />
         <div
-          className="absolute inset-x-0 top-[calc(var(--barre)+2.5rem)] px-[var(--gouttiere)] text-center"
+          className="hero-entree absolute inset-x-0 top-[calc(var(--barre)+2.5rem)] px-[var(--gouttiere)] text-center"
           style={{ opacity: "calc(1 - var(--t) * 3)" }}
         >
-          <p className="t-etiquette-l tracking-[0.3em] font-medium m-0">{maison}</p>
-          <div className="mx-auto max-w-[30rem] lg:max-w-[44rem]">
+          <p className="t-etiquette-l tracking-[0.3em] font-medium m-0 text-citron">{maison}</p>
+          <div className="mx-auto max-w-[30rem] lg:max-w-[56rem]">
             <h1 className="t-grand mt-4 mb-0">{accroche}</h1>
           </div>
         </div>

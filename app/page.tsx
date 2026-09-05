@@ -23,7 +23,7 @@ export default function Page() {
         </p>
       </section>
 
-      <section className={section} aria-labelledby="trompe">
+      <section className={section} aria-labelledby="trompe" data-reveal>
         <div className="grid gap-10 lg:grid-cols-2 lg:gap-16 items-center">
           <div className="lg:order-2">
             {PIECES_AVEC_COUPE.has("poire") ? (
@@ -58,7 +58,7 @@ export default function Page() {
         action={{ href: `mailto:${maison.email}`, label: "Contactez-nous" }}
       />
 
-      <section className={section} aria-labelledby="boutique">
+      <section className={section} aria-labelledby="boutique" data-reveal>
         <div className="border-t border-filet pt-10 grid gap-8 md:grid-cols-3">
           <div>
             <p className="t-etiquette text-gris m-0">La boutique</p>
