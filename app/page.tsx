@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { GrilleProduits } from "@/components/GrilleProduits";
+import { Bandeau } from "@/components/Bandeau";
 import { Hero } from "@/components/Hero";
 import { Bouton } from "@/components/ui/Bouton";
 import { Lame } from "@/components/ui/Lame";
@@ -81,6 +82,13 @@ export default function Page() {
           </div>
         </div>
       </section>
+
+      <Bandeau
+        nom="creations"
+        etiquette="Événements sur demande"
+        titre="Créations"
+        action={{ href: `mailto:${maison.email}`, label: "Contactez-nous" }}
+      />
 
       <section className={section} aria-labelledby="boutique">
         <div className="border-t border-filet pt-10 grid gap-8 md:grid-cols-3">
