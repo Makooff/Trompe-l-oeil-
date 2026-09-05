@@ -80,19 +80,39 @@ export function FicheModale({ creation: c, precedente, suivante }: { creation: C
     };
   }, [c.id]);
 
-  useEffect(() => {
-    const el = bande.current;
-    if (!el) return;
-    const lire = () => setVue(Math.round(el.scrollLeft / el.clientWidth));
-    el.addEventListener("scroll", lire, { passive: true });
-    return () => el.removeEventListener("scroll", lire);
-  }, []);
+  // Le carrousel : une bande translatée, transition CSS pour les flèches
+  // et les points, glissement au doigt sans transition puis rappel doux.
+  const [glisse, setGlisse] = useState<number | null>(null);
+  const depart = useRef<{ x: number; y: number; id: number } | null>(null);
 
-  const aller = (i: number) => {
-    const el = bande.current;
-    if (!el) return;
-    const n = (i + VUES.length) % VUES.length;
-    el.scrollTo({ left: n * el.clientWidth, behavior: "smooth" });
+  const aller = (i: number) => setVue(Math.max(0, Math.min(VUES.length - 1, i)));
+
+  const surPointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (e.pointerType === "mouse" && e.button !== 0) return;
+    depart.current = { x: e.clientX, y: e.clientY, id: e.pointerId };
+  };
+  const surPointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
+    const d = depart.current;
+    if (!d || d.id !== e.pointerId) return;
+    const dx = e.clientX - d.x;
+    if (glisse === null && Math.abs(dx) < 6) return;
+    if (glisse === null && Math.abs(e.clientY - d.y) > Math.abs(dx)) {
+      depart.current = null;
+      return;
+    }
+    e.currentTarget.setPointerCapture(e.pointerId);
+    // Butée douce aux extrémités.
+    const bord = (vue === 0 && dx > 0) || (vue === VUES.length - 1 && dx < 0);
+    setGlisse(bord ? dx * 0.35 : dx);
+  };
+  const surPointerUp = (e: React.PointerEvent<HTMLDivElement>) => {
+    const d = depart.current;
+    depart.current = null;
+    if (!d || glisse === null) return;
+    const largeur = e.currentTarget.clientWidth || 1;
+    if (glisse < -largeur * 0.15) aller(vue + 1);
+    else if (glisse > largeur * 0.15) aller(vue - 1);
+    setGlisse(null);
   };
 
   // La fenêtre revient sur sa carte si elle en vient, sinon elle redescend
@@ -136,12 +156,17 @@ export function FicheModale({ creation: c, precedente, suivante }: { creation: C
           <div ref={colonneImage} className="relative bg-fond-doux aspect-square lg:aspect-auto lg:min-h-0 rounded-image lg:rounded-none overflow-hidden">
             <div
               ref={bande}
-              className="flex h-full overflow-x-auto snap-x snap-mandatory scroll-smooth [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+              className={`flex h-full touch-pan-y select-none ${glisse === null ? "transition-transform duration-[var(--d-3)] ease-[var(--ease)] motion-reduce:transition-none" : ""}`}
+              style={{ transform: `translateX(calc(${-vue * 100}% + ${glisse ?? 0}px))` }}
               aria-roledescription="carrousel"
               aria-label={`Photos, ${c.nom}`}
+              onPointerDown={surPointerDown}
+              onPointerMove={surPointerMove}
+              onPointerUp={surPointerUp}
+              onPointerCancel={surPointerUp}
             >
               {VUES.map((v, i) => (
-                <figure key={v.variante} className="m-0 shrink-0 w-full h-full snap-start" aria-hidden={vue !== i}>
+                <figure key={v.variante} className="m-0 shrink-0 w-full h-full" aria-hidden={vue !== i}>
                   <picture>
                     <source type="image/avif" srcSet={srcSetPiece(c.id, v.variante, "avif")} sizes="(min-width: 64rem) 36rem, 100vw" />
                     <img
@@ -152,6 +177,7 @@ export function FicheModale({ creation: c, precedente, suivante }: { creation: C
                       loading={i === 0 ? "eager" : "lazy"}
                       decoding="async"
                       className="h-full w-full object-cover"
+                      draggable={false}
                     />
                   </picture>
                 </figure>
@@ -160,7 +186,8 @@ export function FicheModale({ creation: c, precedente, suivante }: { creation: C
             <button
               type="button"
               onClick={() => aller(vue - 1)}
-              className="absolute left-0 top-1/2 -translate-y-1/2 w-12 h-16 grid place-items-center text-blanc mix-blend-difference"
+              disabled={vue === 0}
+              className="absolute left-0 top-1/2 -translate-y-1/2 w-12 h-16 grid place-items-center text-blanc mix-blend-difference transition-opacity duration-[var(--d-2)] disabled:opacity-0 disabled:pointer-events-none"
               aria-label="Photo précédente"
             >
               <Chevron sens="gauche" />
@@ -168,7 +195,8 @@ export function FicheModale({ creation: c, precedente, suivante }: { creation: C
             <button
               type="button"
               onClick={() => aller(vue + 1)}
-              className="absolute right-0 top-1/2 -translate-y-1/2 w-12 h-16 grid place-items-center text-blanc mix-blend-difference"
+              disabled={vue === VUES.length - 1}
+              className="absolute right-0 top-1/2 -translate-y-1/2 w-12 h-16 grid place-items-center text-blanc mix-blend-difference transition-opacity duration-[var(--d-2)] disabled:opacity-0 disabled:pointer-events-none"
               aria-label="Photo suivante"
             >
               <Chevron sens="droite" />
@@ -275,7 +303,7 @@ export function FicheModale({ creation: c, precedente, suivante }: { creation: C
         <Link
           href={`/patisseries/${precedente}`}
           replace
-          className="hidden lg:grid fixed left-0 top-1/2 -translate-y-1/2 w-16 h-32 place-items-center bg-noir text-blanc rounded-r-full cursor-pointer transition-[background-color,color] duration-[var(--d-2)] ease-[var(--ease)] hover:bg-citron hover:text-noir"
+          className="hidden lg:grid fixed left-0 top-1/2 -translate-y-1/2 w-16 h-32 place-items-center bg-blanc text-noir border border-filet border-l-0 rounded-r-full cursor-pointer transition-[background-color,color,border-color] duration-[var(--d-2)] ease-[var(--ease)] hover:bg-noir hover:border-noir hover:text-blanc"
           aria-label="Pièce précédente"
         >
           <Chevron sens="gauche" />
@@ -283,7 +311,7 @@ export function FicheModale({ creation: c, precedente, suivante }: { creation: C
         <Link
           href={`/patisseries/${suivante}`}
           replace
-          className="hidden lg:grid fixed right-0 top-1/2 -translate-y-1/2 w-16 h-32 place-items-center bg-noir text-blanc rounded-l-full cursor-pointer transition-[background-color,color] duration-[var(--d-2)] ease-[var(--ease)] hover:bg-citron hover:text-noir"
+          className="hidden lg:grid fixed right-0 top-1/2 -translate-y-1/2 w-16 h-32 place-items-center bg-blanc text-noir border border-filet border-r-0 rounded-l-full cursor-pointer transition-[background-color,color,border-color] duration-[var(--d-2)] ease-[var(--ease)] hover:bg-noir hover:border-noir hover:text-blanc"
           aria-label="Pièce suivante"
         >
           <Chevron sens="droite" />
