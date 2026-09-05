@@ -41,7 +41,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children, modale }: LayoutProps<"/">) {
   return (
-    <html lang="fr-BE" suppressHydrationWarning>
+    <html lang="fr-BE" data-scroll-behavior="smooth" suppressHydrationWarning>
       <body className={`${hanken.variable} ${fraunces.variable} antialiased`}>
         {/* Les blocs à révéler ne se cachent que si le script tourne. */}
         <script dangerouslySetInnerHTML={{ __html: "document.documentElement.classList.add('js')" }} />
