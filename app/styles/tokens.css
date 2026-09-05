@@ -35,14 +35,16 @@
   --gouttiere: max(1.25rem, env(safe-area-inset-left), env(safe-area-inset-right));
   --barre: 4rem;
 
-  /* Rayons : aucun */
+  /* Rayons : aucun sur les boutons et les filets, un seul sur les images */
   --r-0: 0px;
+  --r-image: 0.75rem;
 
   /* Mouvement */
   --ease: cubic-bezier(0.16, 1, 0.3, 1);
   --d-1: 160ms;
   --d-2: 240ms;
   --d-3: 400ms;
+  --d-4: 900ms; /* zoom au survol des photos */
 }
 
 @media (min-width: 48rem) {
@@ -73,5 +75,6 @@
   --font-sans: var(--font-hanken), ui-sans-serif, system-ui, sans-serif;
 
   --radius-nette: var(--r-0);
+  --radius-image: var(--r-image);
   --ease-maison: var(--ease);
 }

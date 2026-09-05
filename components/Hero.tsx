@@ -1,13 +1,19 @@
+import { existsSync } from "node:fs";
+import { join } from "node:path";
 import { RetraitDate } from "./RetraitDate";
 import { SequenceCoupe } from "./ui/SequenceCoupe";
+import { creationParId } from "@/content/creations";
 import { maison } from "@/content/maison";
 
 /**
  * L'accueil en deux blocs, comme une page de click & collect : à gauche le
  * nom, les créations du moment, l'adresse et les horaires ; à droite, sur
- * noir, le jour de retrait. Dessous, le citron qui s'ouvre au scroll.
+ * noir, le jour de retrait. Dessous, la pièce vedette qui s'ouvre au
+ * scroll, seulement quand sa séquence vidéo existe (scripts/sequence.mjs).
  */
 export function Hero() {
+  const vedette = creationParId.citron;
+  const sequence = existsSync(join(process.cwd(), "public", "sequences", vedette.id, "manifeste.json"));
   return (
     <>
       <section className="pt-[var(--barre)] grid lg:grid-cols-[1.4fr_1fr]" aria-label="Accueil">
@@ -40,12 +46,14 @@ export function Hero() {
         </div>
       </section>
 
-      <section className="px-[var(--gouttiere)] pt-16 lg:pt-20 flex flex-col items-center" aria-label="Le citron">
-        <div className="w-full max-w-[min(60svh,34rem)]">
-          <SequenceCoupe id="citron" faux="Citron" pilotage="bloc" />
-        </div>
-        <p className="t-etiquette text-gris mt-2 mb-0 text-center">Descendez, le citron s&apos;ouvre.</p>
-      </section>
+      {sequence && (
+        <section className="px-[var(--gouttiere)] pt-16 lg:pt-20 flex flex-col items-center" aria-label="La coupe">
+          <div className="w-full max-w-[min(60svh,34rem)]">
+            <SequenceCoupe id={vedette.id} faux={vedette.nom} pilotage="bloc" />
+          </div>
+          <p className="t-etiquette text-gris mt-2 mb-0 text-center">Descendez, la pièce s&apos;ouvre.</p>
+        </section>
+      )}
     </>
   );
 }

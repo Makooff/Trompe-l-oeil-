@@ -1,7 +1,7 @@
 import Link from "next/link";
 import type { ComponentProps, ReactNode } from "react";
 
-type Variante = "plein" | "contour" | "texte";
+type Variante = "plein" | "contour" | "clair" | "texte";
 
 const base =
   "inline-flex items-center justify-center h-12 px-7 t-etiquette-l select-none " +
@@ -11,6 +11,7 @@ const base =
 const variantes: Record<Variante, string> = {
   plein: "bg-noir text-blanc hover:bg-gris",
   contour: "border border-noir text-noir hover:bg-noir hover:text-blanc",
+  clair: "border border-blanc text-blanc hover:bg-blanc hover:text-noir",
   texte: "px-0 h-auto lien",
 };
 

@@ -42,7 +42,7 @@ export default async function Page({ params }: Props) {
               <p className="t-etiquette text-gris-clair mt-3 mb-0">Glissez la lame pour ouvrir la pièce.</p>
             </>
           ) : (
-            <div className="aspect-[482/666] bg-fond-doux overflow-hidden">
+            <div className="aspect-[482/666] bg-fond-doux overflow-hidden rounded-image">
               <img
                 src={`/pieces/${c.id}/ferme-1024.webp`}
                 srcSet={srcSetPiece(c.id, "ferme", "webp")}
