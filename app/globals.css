@@ -69,6 +69,17 @@ a {
   margin: 0;
 }
 
+/* La signature du hero : Fraunces en italique léger, un autre dessin que les titres. */
+.t-signature {
+  font-family: var(--police-titre);
+  font-variation-settings: "SOFT" 100, "WONK" 1;
+  font-style: italic;
+  font-weight: 300;
+  font-size: clamp(2.5rem, 6.5vw, 5.5rem);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+}
+
 .t-petit-titre {
   font-size: var(--t-petit-titre);
   line-height: 1.35;
