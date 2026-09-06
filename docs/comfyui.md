@@ -417,3 +417,100 @@ starting frame, lighting unchanged, no hands, no text
 ```
 
 6 s, 1080p, puis `node scripts/sequence.mjs <id> --nom orbite`.
+
+## 13. La coupe en haute qualité, en local, sur fond crème
+
+Le détail d'une vidéo image-vers-vidéo vient à 80 % de sa première image.
+Investir d'abord dans deux images fixes très nettes, puis dans la vidéo,
+puis dans l'agrandissement. Le fond crème `#f4f0e7` vient du prompt, jamais
+d'un détourage : l'éclairage reste cohérent et le hero se fond dans le site.
+
+### 13.1 Deux images fixes 2K
+
+Pièce fermée, FLUX.2 Klein ou FLUX.1 dev fp8, 1344 × 768, seed fixé, huit
+variantes, garder la plus nette.
+
+```
+ultra detailed studio product photograph of a trompe-l'oeil lemon pastry,
+hyper realistic lemon-shaped entremets with a pale yellow velvet cocoa
+butter coating, fine dimpled peel texture, small green stem nub, standing
+on a low round matte white ceramic plinth, seamless pale cream background,
+soft diffused studio light from the top left, gentle soft shadow under the
+pastry, 85mm macro lens, f/8, razor sharp focus, centered, one third
+headroom, no text, no props
+```
+
+Négatif :
+
+```
+blurry, soft focus, plastic, cartoon, illustration, oversaturated,
+watermark, text, hands, extra objects, black background, dark background,
+vignette
+```
+
+Pièce coupée, Klein en mode édition, image fermée en référence, même seed :
+
+```
+cut this lemon pastry cleanly in half vertically and slide the two halves
+a few centimeters apart, both cross-sections facing the camera: thin white
+chocolate shell, smooth pale yellow lemon cream, light almond sponge base
+with a thin golden crust, keep exactly the same plinth, cream background,
+lighting, camera angle and scale
+```
+
+Netteté : `UpscaleModelLoader` 4x-UltraSharp sur les deux images, puis
+`ImageScale` lanczos vers 2688 × 1536. Si le fond sort gris ou jaune, un
+nœud Color Match vers un aplat `#f4f0e7`.
+
+### 13.2 La vidéo, MiniMax H3
+
+| Champ | Valeur |
+|---|---|
+| first_frame | image fermée, 1344 × 768 |
+| last_frame | image coupée, 1344 × 768 |
+| width × height | 1344 × 768, la résolution officielle (0,98 MP) |
+| duration | 5.0 |
+| turbo_mode | false |
+| turbo_model_strength | 0, ou LoRA débranché |
+| steps | 30 |
+| noise_seed | fixé, noté dans `content/creations.ts` |
+
+```
+static locked camera, no camera movement, a sharp chef's knife enters from
+above and slices the lemon-shaped pastry cleanly in half from top to bottom,
+then the two halves slowly slide apart sideways revealing pale yellow lemon
+cream and almond sponge inside, seamless cream background, soft studio
+light, ultra detailed, photorealistic, smooth natural motion, no hands
+```
+
+Négatif :
+
+```
+camera pan, zoom, shaky, blurry, morphing, flicker, warping, extra knives,
+hands, text, dark background, color shift
+```
+
+Quatre à six seeds, garder celle où le fond ne bouge pas et où la coupe
+tombe au milieu. Cinq à dix minutes par essai sans turbo sur une 4070 Ti.
+
+### 13.3 Agrandir et fluidifier
+
+1. SeedVR2 ×2 : Menu → Templates → « SeedVR2 », le graphe complet est
+   fourni. Sortie 2688 × 1536, tient en 12 Go avec le tiling. Repli :
+   « Video Upscale (GAN x4) » RealESRGAN puis réduction à 2688.
+2. RIFE ×2, nœud RIFE VFI de `ComfyUI-Frame-Interpolation` : 24 → 48 i/s.
+3. Enregistrer en h264, `crf 14`, 48 i/s, sans audio.
+
+Puis, dans le dépôt :
+
+```bash
+FFMPEG=/chemin/vers/ffmpeg node scripts/sequence.mjs caillou --fps 30 --hauteur 1080
+```
+
+### 13.4 Si MiniMax H3 déçoit
+
+Wan 2.2 I2V 14B en GGUF Q4 ou Q5 avec le nœud `WanFirstLastFrameToVideo`
+(template Comfy « first-last frame »). Sur 12 Go : 720p, 81 images,
+encodeur texte sur CPU, 20 à 30 étapes sans LoRA lightx2v. Quinze à
+vingt-cinq minutes par essai, textures et mouvement plus fins. Mêmes
+prompts, mêmes images fermée et coupée.
