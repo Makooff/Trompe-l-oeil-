@@ -229,7 +229,7 @@ export function SequenceCoupe({
   return (
     <div
       ref={cadre}
-      className={`relative w-full overflow-hidden ${className}`}
+      className={`relative w-full overflow-hidden bg-creme ${className}`}
       style={{ aspectRatio: ratio }}
       role="img"
       aria-label={`${faux}, la pièce s'ouvre en deux au défilement`}

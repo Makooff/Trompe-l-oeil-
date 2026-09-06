@@ -1,7 +1,7 @@
 {
-  "images": 103,
-  "largeur": 1274,
-  "hauteur": 720,
-  "fps": 20,
+  "images": 124,
+  "largeur": 1878,
+  "hauteur": 1080,
+  "fps": 24,
   "motif": "coupe-%03d.webp"
 }

@@ -15,7 +15,7 @@ const LIENS = [
   { href: "/la-maison", label: "La maison" },
 ];
 
-/** Vrai tant que le hero noir de l'accueil passe encore sous la barre. */
+/** Vrai tant que le hero de l'accueil passe encore sous la barre : elle reste transparente. */
 function useSurHero(accueil: boolean) {
   return useSyncExternalStore(
     (cb) => {
@@ -38,7 +38,7 @@ function useSurHero(accueil: boolean) {
 }
 
 /**
- * La barre. Fixe, crème, un filet en bas, transparente sur le hero noir. Le nom au centre, les liens à
+ * La barre. Fixe, crème, un filet en bas, transparente sur le hero. Le nom au centre, les liens à
  * gauche, le panier à droite. Sur petit écran, un bouton ouvre le menu en
  * plein écran.
  */
@@ -54,7 +54,7 @@ export function Nav() {
   return (
     <header
       data-sur-hero={surHero && !ouvert ? "" : undefined}
-      className="fixed inset-x-0 top-0 z-50 bg-creme text-noir border-b border-filet transition-[background-color,color,border-color] duration-[var(--d-3)] ease-[var(--ease)] data-[sur-hero]:bg-transparent data-[sur-hero]:text-blanc data-[sur-hero]:border-transparent"
+      className="fixed inset-x-0 top-0 z-50 bg-creme text-noir border-b border-filet transition-[background-color,color,border-color] duration-[var(--d-3)] ease-[var(--ease)] data-[sur-hero]:bg-transparent data-[sur-hero]:border-transparent"
     >
       <div className="h-[var(--barre)] px-[var(--gouttiere)] grid grid-cols-[1fr_auto_1fr] items-center">
         <nav aria-label="Principale" className="hidden lg:flex gap-7">
