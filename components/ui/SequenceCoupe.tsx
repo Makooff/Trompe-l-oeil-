@@ -107,12 +107,14 @@ export function SequenceCoupe({
     if (!manifeste) return;
     const el = cadre.current;
     const c = canvas.current;
-    const ctx = c?.getContext("2d");
+    // Opaque en mode couvrir, sans synchronisation avec le DOM : le
+    // compositeur affiche la nouvelle image sans attendre le reste de la page.
+    const ctx = c?.getContext("2d", { alpha: ajustement !== "couvrir", desynchronized: true });
     if (!el || !c || !ctx) return;
 
-    const images: (HTMLImageElement | null)[] = new Array(manifeste.images).fill(null);
+    const n = manifeste.images;
     const reduit = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    let cible = reduit ? Math.round((manifeste.images - 1) * 0.5) : 0;
+    let cible = reduit ? Math.round((n - 1) * 0.5) : 0;
     // L'image courante rattrape la cible avec un amorti : un cran de molette
     // saute dix images, l'œil les voit toutes défiler.
     let courant = cible;
@@ -120,24 +122,82 @@ export function SequenceCoupe({
     let raf = 0;
     let vivant = true;
 
+    // Les fichiers encodés (quelques Mo) restent tous en mémoire ; les
+    // images décodées, elles, coûtent 8 Mo chacune : on n'en garde qu'une
+    // fenêtre autour de la position, décodées hors du fil principal par
+    // createImageBitmap. Décoder à chaque dessin est ce qui saccade.
+    const fichiers: (Blob | null)[] = new Array(n).fill(null);
+    const decodees = new Map<number, ImageBitmap | HTMLImageElement>();
+    const enCours = new Set<number>();
+    const FENETRE = 10;
+    const MAX_DECODEES = 40;
+    let sens = 1;
+
     const chemin = (i: number) =>
       `/sequences/${id}/${manifeste.motif.replace("%03d", String(i).padStart(3, "0"))}`;
 
-    // L'image la plus proche déjà chargée, pour ne jamais laisser le canvas vide.
-    const plusProche = (i: number) => {
-      if (images[i]) return images[i];
-      for (let d = 1; d < manifeste.images; d++) {
-        if (images[i - d]) return images[i - d];
-        if (images[i + d]) return images[i + d];
+    const decoder = async (i: number) => {
+      const f = fichiers[i];
+      if (!f || decodees.has(i) || enCours.has(i)) return;
+      enCours.add(i);
+      try {
+        let image: ImageBitmap | HTMLImageElement;
+        if ("createImageBitmap" in window) {
+          image = await createImageBitmap(f);
+        } else {
+          const img = new Image();
+          img.src = URL.createObjectURL(f);
+          await img.decode();
+          image = img;
+        }
+        if (!vivant) return;
+        decodees.set(i, image);
+        elaguer();
+        demander();
+      } catch {
+        // Fichier illisible : l'image voisine prendra sa place.
+      } finally {
+        enCours.delete(i);
+      }
+    };
+
+    // Garde les images décodées les plus proches de la position courante.
+    const elaguer = () => {
+      if (decodees.size <= MAX_DECODEES) return;
+      const loin = [...decodees.keys()].sort((x, y) => Math.abs(y - courant) - Math.abs(x - courant));
+      for (const i of loin.slice(0, decodees.size - MAX_DECODEES)) {
+        const img = decodees.get(i);
+        if (img && "close" in img) img.close();
+        decodees.delete(i);
+      }
+    };
+
+    // Décode devant la position, dans le sens du défilement, un peu derrière.
+    const anticiper = () => {
+      const centre = Math.round(courant);
+      for (let d = 0; d <= FENETRE; d++) void decoder(centre + d * sens);
+      for (let d = 1; d <= 3; d++) void decoder(centre - d * sens);
+      void decoder(Math.round(cible));
+    };
+
+    // L'image décodée la plus proche, pour ne jamais laisser le canvas vide.
+    const plusProche = (i: number): [number, ImageBitmap | HTMLImageElement] | null => {
+      for (let d = 0; d < n; d++) {
+        const a = decodees.get(i - d);
+        if (a) return [i - d, a];
+        const b = decodees.get(i + d);
+        if (b) return [i + d, b];
       }
       return null;
     };
 
     const dimensionner = () => {
       const r = el.getBoundingClientRect();
-      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      // 1,5 suffit pour une vidéo : moitié moins de pixels à remplir qu'à 2.
+      const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
       c.width = Math.round(r.width * dpr);
       c.height = Math.round(r.height * dpr);
+      ctx.imageSmoothingQuality = "medium";
       dessinee = -1;
     };
 
@@ -146,19 +206,22 @@ export function SequenceCoupe({
       const ecart = cible - courant;
       if (Math.abs(ecart) < 0.05) courant = cible;
       else {
+        sens = ecart > 0 ? 1 : -1;
         courant += ecart * (reduit ? 1 : 0.16);
         raf = requestAnimationFrame(dessiner);
       }
-      const img = plusProche(Math.round(courant));
-      if (!img) return;
-      const index = images.indexOf(img);
+      anticiper();
+      const trouve = plusProche(Math.round(courant));
+      if (!trouve) return;
+      const [index, img] = trouve;
       if (index === dessinee) return;
       dessinee = index;
-      ctx.clearRect(0, 0, c.width, c.height);
+      const iw = img.width;
+      const ih = img.height;
       // Contenir : l'image entière tient dans le canvas. Couvrir : elle le remplit.
-      const k = (ajustement === "couvrir" ? Math.max : Math.min)(c.width / img.naturalWidth, c.height / img.naturalHeight);
-      const w = img.naturalWidth * k;
-      const h = img.naturalHeight * k;
+      const k = (ajustement === "couvrir" ? Math.max : Math.min)(c.width / iw, c.height / ih);
+      const w = iw * k;
+      const h = ih * k;
       ctx.drawImage(img, (c.width - w) / 2, (c.height - h) / 2, w, h);
     };
     const demander = () => {
@@ -183,28 +246,31 @@ export function SequenceCoupe({
         const centre = r.top + r.height * CENTRE_PIECE;
         t = doux(clamp01((h * ENTREE - centre) / (h * (ENTREE - SORTIE))));
       }
-      cible = Math.round(t * (manifeste.images - 1));
+      cible = Math.round(t * (n - 1));
       demander();
     };
 
-    // Chargement progressif, deux images à la fois.
-    const ordre = ordreDeChargement(manifeste.images);
+    // Chargement des fichiers, trois à la fois, par ordre d'importance. Les
+    // premiers reçus (début, fin, milieu…) sont décodés tout de suite pour
+    // couvrir toute la course ; les suivants attendent qu'on s'approche.
+    const ordre = ordreDeChargement(n);
     let curseur = 0;
-    const charger = () => {
-      if (!vivant || curseur >= ordre.length) return;
-      const i = ordre[curseur++];
-      const img = new Image();
-      img.decoding = "async";
-      img.onload = () => {
-        images[i] = img;
-        demander();
-        charger();
-      };
-      img.onerror = charger;
-      img.src = chemin(i);
+    const charger = async () => {
+      while (vivant && curseur < ordre.length) {
+        const i = ordre[curseur++];
+        try {
+          const r = await fetch(chemin(i));
+          if (!r.ok) continue;
+          fichiers[i] = await r.blob();
+          if (curseur <= 9 || Math.abs(i - courant) <= FENETRE) void decoder(i);
+        } catch {
+          // Réseau : on passe à la suivante.
+        }
+      }
     };
-    charger();
-    charger();
+    void charger();
+    void charger();
+    void charger();
 
     const ro = new ResizeObserver(() => {
       dimensionner();
@@ -221,6 +287,7 @@ export function SequenceCoupe({
       ro.disconnect();
       stop();
       cancelAnimationFrame(raf);
+      for (const img of decodees.values()) if ("close" in img) img.close();
     };
   }, [manifeste, id, pilotage, ajustement]);
 
