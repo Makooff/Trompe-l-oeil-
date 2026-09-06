@@ -29,7 +29,7 @@ export function HeroCoupe({ id, nom, signature }: { id: string; nom: string; sig
   }, []);
 
   return (
-    <section ref={section} data-epingle className={`relative ${HAUTEUR} bg-noir text-blanc`} style={{ "--t": 0 } as React.CSSProperties} aria-label="Accueil">
+    <section ref={section} data-epingle className={`relative ${HAUTEUR} bg-creme text-noir`} style={{ "--t": 0 } as React.CSSProperties} aria-label="Accueil">
       <div className="sticky top-0 h-svh overflow-hidden">
         <SequenceCoupe
           id={id}
@@ -40,7 +40,7 @@ export function HeroCoupe({ id, nom, signature }: { id: string; nom: string; sig
           className="absolute inset-0 h-full"
         />
         <div
-          className="absolute inset-x-0 bottom-0 h-[45%] bg-linear-to-t from-noir/75 to-transparent pointer-events-none"
+          className="absolute inset-x-0 bottom-0 h-[45%] bg-linear-to-t from-creme/85 to-transparent pointer-events-none"
           style={{ opacity: "calc(1 - var(--t) * 3)" }}
           aria-hidden="true"
         />
@@ -49,7 +49,7 @@ export function HeroCoupe({ id, nom, signature }: { id: string; nom: string; sig
           style={{ opacity: "calc(1 - var(--t) * 3)" }}
         >
           <h1 className="t-signature m-0">{signature}</h1>
-          <p className="m-0 mt-5 t-etiquette text-gris-clair">Descendez, le {nom.toLowerCase()} s&apos;ouvre.</p>
+          <p className="m-0 mt-5 t-etiquette text-gris">Descendez, le {nom.toLowerCase()} s&apos;ouvre.</p>
         </div>
       </div>
     </section>
